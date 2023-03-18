@@ -12,8 +12,13 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+<<<<<<< Updated upstream
 ### Additional ###
 docker/db/mysql/data
+=======
+### googleclient id&pw ###
+.googleapi.yml
+>>>>>>> Stashed changes
 
 ### STS ###
 .apt_generated

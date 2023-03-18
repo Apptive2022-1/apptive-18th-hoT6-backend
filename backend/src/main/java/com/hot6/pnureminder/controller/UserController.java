@@ -2,38 +2,38 @@ package com.hot6.pnureminder.controller;
 
 import com.hot6.pnureminder.Dto.UserDto;
 import com.hot6.pnureminder.domain.user.User;
+import com.hot6.pnureminder.repository.UserRepository;
 import com.hot6.pnureminder.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/test")
+@RequiredArgsConstructor
+@CrossOrigin("*")
 public class UserController {
 
+//(순환 참조 에러, 객체 불변성, 테스트코드 작성시 편리성을 위해 생성자 주입 방식 적용)
+//의존성 주입 실수 방지를 위해 final 키워드 사용
+//
+    private final UserRepository userRepository;
     private final UserService userService;
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
 
-    @PostMapping("/users")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        user.setKeyword(user.getKeyword());
-        // 회원 정보 저장
-        userService.save(user);
-        return ResponseEntity.ok("User created successfully");
+    @PostMapping("/usercreate")
+    public ResponseEntity<User> createUser (@RequestBody UserDto userDto){
+        return ResponseEntity.ok(userService.saveUser(userDto));
     }
-    @GetMapping("/members/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
-        Optional<User> user = userService.findById(id);
-        if (user.isPresent()) {
-            return ResponseEntity.ok().body(user);
-        }else {
-            return ResponseEntity.notFound().build();
-        }
+
+    @GetMapping("/user/{code}")
+    public ResponseEntity<User> getUser(@PathVariable String code) {
+        return ResponseEntity.ok(userService.InfoUser(code));
+    }
+    @PutMapping("/user/{code}")
+    public ResponseEntity<User> updateUser(@RequestBody UserDto userDto, @PathVariable String code) {
+        return ResponseEntity.ok(userService.updateUser(code,userDto));
     }
 }

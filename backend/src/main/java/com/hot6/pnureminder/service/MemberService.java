@@ -1,5 +1,6 @@
 package com.hot6.pnureminder.service;
 
+import com.hot6.pnureminder.Dto.LoginDto;
 import com.hot6.pnureminder.Dto.SignUpDto;
 import com.hot6.pnureminder.Dto.TokenDto;
 import com.hot6.pnureminder.JWT.JwtTokenProvider;
@@ -27,19 +28,20 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public TokenDto login(String memberId, String password){
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberId, password);
-        Authentication authentication=authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+    public TokenDto login(LoginDto loginDto){
+        Member member = memberRepository.findByMemberId(loginDto.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
-        TokenDto tokenDto = jwtTokenProvider.generateToken(authentication);
+        if(encoder.matches(loginDto.getPassword(), member.getPassword())) {
+            throw  new IllegalArgumentException("패스워드가 일치하지 않습니다.");
+        }
 
-        return tokenDto;
+        return jwtTokenProvider.generateToken(member.getMemberId(), member.getKeyword());
     }
 
     @Transactional
     public String signUp(SignUpDto signUpDto) throws Exception{
         boolean existcheck = checkMemberId(signUpDto.getMemberId());
-
         if (existcheck) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }

@@ -31,11 +31,10 @@ public class JwtTokenProvider {
     }
 
     // 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
-    public TokenDto generateToken(Authentication authentication) {
-        // 권한 가져오기
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+    public TokenDto generateToken(String memberId, String keyword) {
+
+        Claims claims = Jwts.claims().setSubject(memberId);
+        claims.put("keywords", keyword);
 
         long now = (new Date()).getTime();
         Integer min = 60000;
@@ -43,8 +42,7 @@ public class JwtTokenProvider {
         Date accessTokenExpiresIn = new Date(now + 30*min);
 
         String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim("auth", authorities)
+                .setClaims(claims)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();

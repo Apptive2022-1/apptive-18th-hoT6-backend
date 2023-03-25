@@ -1,10 +1,12 @@
 package com.hot6.pnureminder.controller;
 
+import com.hot6.pnureminder.Dto.LoginDto;
 import com.hot6.pnureminder.Dto.SignUpDto;
 import com.hot6.pnureminder.Dto.TokenDto;
 import com.hot6.pnureminder.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +29,8 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> loginSuccess (@RequestBody Map<String,String> loginForm){
-        TokenDto token = memberService.login(loginForm.get("memberId"), loginForm.get("password"));
-        return ResponseEntity.ok(token);
+    public ResponseEntity login (@RequestBody LoginDto loginDto){
+        return new ResponseEntity(memberService.login(loginDto), HttpStatus.OK);
     }
 
 

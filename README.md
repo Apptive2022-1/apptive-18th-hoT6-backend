@@ -10,6 +10,11 @@ Customized services with the information &amp;amp; schedules and Finding nearest
 
 
 
+## DB structure (ERD)
+
+![image](https://user-images.githubusercontent.com/81455273/228305276-9f9a36cf-59f2-4bf5-8d25-f22aff1bb6cc.png)
+
+
 
 ## API structure
 
@@ -37,11 +42,6 @@ Customized services with the information &amp;amp; schedules and Finding nearest
 
 ### DOM-based automation drop-down selection
 
-
-
-## DB structure stack
-
-![image](https://user-images.githubusercontent.com/81455273/228015611-5c095ac8-4c05-49fe-8cdc-3d61df1615d9.png)
 
 
 ## NearRoom DB AutoBuild (03/29) Ver 1.0.0

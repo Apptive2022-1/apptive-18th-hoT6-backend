@@ -1,21 +1,15 @@
-# apptive-18th-team4
+# PNU 알리미 / PNU_reminder
 Customized services with the information &amp;amp; schedules and Finding nearest empty office location to user
+
 
 
 ## Server for creating and updating databases
 
  - Python , Selenium , MySQL(Same with this project) compose with Docker
- * https://github.com/ChoMinGi/PNUtimetable-server
+ * https://github.com/ChoMinGi/PNUreminder-DBserver
 
 
-## DB structure stack
 
-![image](https://user-images.githubusercontent.com/81455273/228015611-5c095ac8-4c05-49fe-8cdc-3d61df1615d9.png)
-
-
-## DB automation
-
-![image](https://user-images.githubusercontent.com/81455273/228016043-4e8508ca-522d-4519-b503-a4f787a53f26.png)
 
 ## API structure
 
@@ -25,3 +19,35 @@ Customized services with the information &amp;amp; schedules and Finding nearest
 
 ### Announce API
 ![image](https://user-images.githubusercontent.com/81455273/228016125-e9c299fe-eb17-4233-a52b-bb3b1ae893a6.png)
+
+
+
+# About DB-server
+
+
+## DB automation
+
+![image](https://user-images.githubusercontent.com/81455273/228016043-4e8508ca-522d-4519-b503-a4f787a53f26.png)
+
+
+
+### Python , Selenium , MySQL
+
+
+
+### DOM-based automation drop-down selection
+
+
+
+## DB structure stack
+
+![image](https://user-images.githubusercontent.com/81455273/228015611-5c095ac8-4c05-49fe-8cdc-3d61df1615d9.png)
+
+
+## NearRoom DB AutoBuild (03/29) Ver 1.0.0
+
+![image](https://user-images.githubusercontent.com/81455273/228279616-f617ab33-0ad2-45e2-8afd-8ac77a0981cb.png)
+
+## AnnualPlan DB AutoBuild (03/26) Ver 1.1.0
+
+![image](https://user-images.githubusercontent.com/81455273/228280016-498f8983-9bb4-46cb-89f2-eb622642d8d1.png)

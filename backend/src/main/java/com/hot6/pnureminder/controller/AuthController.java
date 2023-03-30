@@ -1,9 +1,6 @@
 package com.hot6.pnureminder.controller;
 
-import com.hot6.pnureminder.dto.MemberRequestDto;
-import com.hot6.pnureminder.dto.MemberResponseDto;
-import com.hot6.pnureminder.dto.TokenDto;
-import com.hot6.pnureminder.dto.TokenRequestDto;
+import com.hot6.pnureminder.dto.*;
 import com.hot6.pnureminder.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +21,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody MemberRequestDto memberRequestDto) {
-        return ResponseEntity.ok(authService.login(memberRequestDto));
+    public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) {
+        return ResponseEntity.ok(authService.login(loginDto));
     }
 
     @PostMapping("/reissue")

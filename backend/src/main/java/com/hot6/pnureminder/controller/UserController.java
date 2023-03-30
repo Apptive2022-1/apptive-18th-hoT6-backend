@@ -1,14 +1,10 @@
 package com.hot6.pnureminder.controller;
 
-import com.hot6.pnureminder.Dto.UserDto;
-import com.hot6.pnureminder.domain.user.User;
 import com.hot6.pnureminder.repository.UserRepository;
 import com.hot6.pnureminder.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/test")

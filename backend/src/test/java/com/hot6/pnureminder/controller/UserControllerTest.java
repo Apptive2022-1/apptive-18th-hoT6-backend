@@ -1,8 +1,6 @@
 package com.hot6.pnureminder.controller;
 
-import com.hot6.pnureminder.Dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hot6.pnureminder.domain.user.User;
 import com.hot6.pnureminder.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

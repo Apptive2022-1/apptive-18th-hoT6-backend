@@ -1,7 +1,5 @@
 package com.hot6.pnureminder.service;
 
-import com.hot6.pnureminder.Dto.UserDto;
-import com.hot6.pnureminder.domain.user.User;
 import com.hot6.pnureminder.function.RandomCodeGenerator;
 import com.hot6.pnureminder.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;

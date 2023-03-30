@@ -1,6 +1,5 @@
 package com.hot6.pnureminder.JWT;
 
-import com.hot6.pnureminder.Dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

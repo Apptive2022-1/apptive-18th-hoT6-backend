@@ -1,7 +1,7 @@
 package com.hot6.pnureminder.domain.keyword;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.hot6.pnureminder.domain.user.Member;
+import com.hot6.pnureminder.domain.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -19,14 +19,7 @@ public class PnureminderApplication {
 	public static void main(String[] args) {
 
 		new SpringApplicationBuilder(PnureminderApplication.class)
-				.properties(PROPERTIES)
 				.run(args);
 	}
-
-	private static final String PROPERTIES =
-			"spring.config.location="
-					+ "classpath:/application.yml";
-					//+ ",classpath:/googleapi.yml";
-
 
 }

@@ -1,24 +1,9 @@
-<<<<<<< Updated upstream
-.env
-*.pyc
-db.sqlite3
-__pycache__
-0*.py
-=======
 HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
-<<<<<<< Updated upstream
-### Additional ###
-docker/db/mysql/data
-=======
-### googleclient id&pw ###
-.googleapi.yml
->>>>>>> Stashed changes
 
 ### STS ###
 .apt_generated
@@ -50,4 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
->>>>>>> Stashed changes

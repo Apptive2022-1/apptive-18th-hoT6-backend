@@ -1,28 +1,20 @@
-package com.hot6.pnureminder.domain.entity;
-
+package com.hot6.pnureminder.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.*;
 
-import java.util.Collection;
-
-@Data
 @Entity
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Users")
+@Table(name = "reminderusers")
 public class Member {
 
     @Id
-    @Column(unique = true, name= "pk")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long Id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
+    private Long id;
 
     @Column(updatable = false,unique = true,nullable = false)
     private String email;
@@ -49,6 +41,4 @@ public class Member {
         this.findAnswer = findAnswer;
         this.authority = authority;
     }
-
 }
-

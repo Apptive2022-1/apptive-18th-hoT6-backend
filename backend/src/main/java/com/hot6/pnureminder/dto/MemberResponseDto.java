@@ -1,20 +1,17 @@
 package com.hot6.pnureminder.dto;
 
-
-import com.hot6.pnureminder.domain.entity.Member;
-import jdk.jfr.Name;
+import com.hot6.pnureminder.entity.Member;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberResponseDto {
-
     private String email;
 
-    public static MemberResponseDto of(Member member){
+    public static MemberResponseDto of(Member member) {
         return new MemberResponseDto(member.getEmail());
     }
 }

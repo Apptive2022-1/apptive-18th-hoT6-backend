@@ -1,32 +1,28 @@
 package com.hot6.pnureminder.controller;
 
+import com.hot6.pnureminder.dto.MemberResponseDto;
 import com.hot6.pnureminder.service.MemberService;
+import com.hot6.pnureminder.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping({"/test"})
+@RequestMapping("/api/member")
 public class MemberController {
-
-//(순환 참조 에러, 객체 불변성, 테스트코드 작성시 편리성을 위해 생성자 주입 방식 적용)
-//의존성 주입 실수 방지를 위해 final 키워드 사용
-//
     private final MemberService memberService;
 
-    @PostMapping("/signup")
-    public String signUp(@RequestBody SignUpDto signUpDto) throws Exception {
-        return memberService.signUp(signUpDto);
+    @GetMapping("/me")
+    public ResponseEntity<MemberResponseDto> findMemberInfoById() {
+        return ResponseEntity.ok(memberService.findMemberInfoById(SecurityUtil.getCurrentMemberId()));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity login (@RequestBody LoginDto loginDto){
-        return new ResponseEntity(memberService.login(loginDto), HttpStatus.OK);
+    @GetMapping("/{email}")
+    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(memberService.findMemberInfoByEmail(email));
     }
-
-
 }

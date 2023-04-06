@@ -21,6 +21,9 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @Column(columnDefinition = "int default 0")
+    private Integer state;
+
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "findQuestion")
@@ -33,9 +36,10 @@ public class Member {
     private Authority authority;
 
     @Builder
-    public Member(String email, String password, String nickname,Integer findQuesNum, String findAnswer, Authority authority){
+    public Member(String email, String password,Integer state, String nickname,Integer findQuesNum, String findAnswer, Authority authority){
         this.email = email;
         this.password = password;
+        this.state = state;
         this.nickname = nickname;
         this.findQuesNum = findQuesNum;
         this.findAnswer = findAnswer;

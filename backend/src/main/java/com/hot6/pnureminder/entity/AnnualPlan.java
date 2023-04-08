@@ -1,8 +1,12 @@
 package com.hot6.pnureminder.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
 @Table(name = "annualplan")
 public class AnnualPlan {
     @Id
@@ -16,7 +20,7 @@ public class AnnualPlan {
     private String context;
 
     @Column(name = "state")
-    private String state;
+    private Integer state;
 
 
 }

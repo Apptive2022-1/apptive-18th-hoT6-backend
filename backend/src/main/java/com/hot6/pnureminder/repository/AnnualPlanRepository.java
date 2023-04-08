@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AnnualPlanRepository extends JpaRepository<AnnualPlan, String> {
-    List<AnnualPlan> findByState (String state);
+public interface AnnualPlanRepository extends JpaRepository<AnnualPlan, Long> {
+    List<AnnualPlan> findAllByStateOrState (Integer state1, Integer state2);
 
 
 }

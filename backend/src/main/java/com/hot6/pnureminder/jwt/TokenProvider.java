@@ -59,6 +59,9 @@ public class TokenProvider {
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
 
+        log.info("Generated Token: {}", accessToken);
+        log.info("Expires at: {}", accessTokenExpiresIn);
+
         return TokenDto.builder()
             .grantType(BEARER_TYPE)
             .accessToken(accessToken)

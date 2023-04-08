@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping("/me")
-    public ResponseEntity<MemberResponseDto> findMemberInfoById() {
-        return ResponseEntity.ok(memberService.findMemberInfoById(SecurityUtil.getCurrentMemberId()));
-    }
+//    @GetMapping("/")
+//    public ResponseEntity<MemberResponseDto> findMemberInfoById() {
+//        return ResponseEntity.ok(memberService.findMemberInfoById(SecurityUtil.getCurrentMemberId()));
+//    }
 
     @GetMapping("/{email}")
-    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(memberService.findMemberInfoByEmail(email));
+    public ResponseEntity<MemberResponseDto> getMemberInfoByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(memberService.findMemberInfoByUsername(username));
     }
 }

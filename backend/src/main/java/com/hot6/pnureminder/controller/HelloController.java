@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @GetMapping("/main")
-    public ResponseEntity<String> maintester(){
+    public ResponseEntity<String> tester(){
         return ResponseEntity.ok("main page test");
     }
 }

@@ -10,6 +10,7 @@ import lombok.*;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="role_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -31,4 +32,6 @@ public class Role {
         return this.name.name();
     }
 
+    public static final Role ROLE_USER = new Role(RoleName.ROLE_USER);
+    public static final Role ROLE_ADMIN = new Role(RoleName.ROLE_ADMIN);
 }

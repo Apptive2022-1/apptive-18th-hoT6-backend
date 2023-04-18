@@ -30,25 +30,19 @@ public class AuthService {
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
-<<<<<<< Updated upstream
-        if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
-=======
-        Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
-                () -> new RuntimeException("Error: Role is not found.")
-        );
+            Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
+                    () -> new RuntimeException("Error: Role is not found.")
+            );
 
         if (memberRepository.existsByUsername(memberRequestDto.getUsername())) {
->>>>>>> Stashed changes
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
-<<<<<<< Updated upstream
-        return MemberResponseDto.of(memberRepository.save(member));
-=======
         member.setRoles(Collections.singleton(userRole));
-        return MemberResponseDto.toDto(memberRepository.save(member));
->>>>>>> Stashed changes
+
+            return MemberResponseDto.toDto(memberRepository.save(member));
+
     }
 
     @Transactional

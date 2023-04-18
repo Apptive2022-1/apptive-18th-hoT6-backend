@@ -2,6 +2,7 @@ package com.hot6.pnureminder.service;
 
 import com.hot6.pnureminder.entity.Member;
 import com.hot6.pnureminder.repository.MemberRepository;
+import com.hot6.pnureminder.dto.MemberResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,19 +24,27 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(username)
+        return memberRepository.findByUsername(username)
             .map(this::createUserDetails)
             .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
     }
 
     // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
     private UserDetails createUserDetails(Member member) {
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthorities().toString());
 
         return new User(
-            String.valueOf(member.getId()),
+            member.getUsername(),
             member.getPassword(),
             Collections.singleton(grantedAuthority)
         );
     }
+
+    public MemberResponseDto findMemberInfoByUsername(String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("유저 정보가 존재하지 않습니다"));
+
+        return MemberResponseDto.toDto(member);
+    }
+
 }

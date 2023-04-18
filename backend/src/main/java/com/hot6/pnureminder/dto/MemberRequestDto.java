@@ -1,8 +1,6 @@
 package com.hot6.pnureminder.dto;
 
-import com.hot6.pnureminder.entity.Authority;
 import com.hot6.pnureminder.entity.Member;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,21 +11,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor
 public class MemberRequestDto {
 
-    private String email;
+    private String username;
     private String password;
 
+    private Integer state;
     private String nickname;
-
     private Integer findQuesNum;
     private String findAnswer;
+
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
-            .email(email)
+            .username(username)
             .password(passwordEncoder.encode(password))
+                .state(state)
                 .nickname(nickname)
                 .findQuesNum(findQuesNum)
                 .findAnswer(findAnswer)
-            .authority(Authority.ROLE_USER)
             .build();
     }
 

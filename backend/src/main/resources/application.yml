@@ -1,24 +1,27 @@
-server:
-  address: localhost
-  port: 8080
-
 spring:
+
+  h2:
+    console:
+      enabled: true
+
   datasource:
+    url: jdbc:mysql://reminder.cnvahiynenth.ap-northeast-2.rds.amazonaws.com:3306/rdsreminder
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/example?serverTimezone=UTC&characterEncoding=UTF-8
-    username: user
-    password: 1234
+    username: chos
+    password: alsrl9913
 
   jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
+        show_sql: true
+
 logging:
   level:
-    org.hibernate.SQL: debug
-    org.hibernate.type: trace
+    com.tutorial: debug
+
+jwt:
+  secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK

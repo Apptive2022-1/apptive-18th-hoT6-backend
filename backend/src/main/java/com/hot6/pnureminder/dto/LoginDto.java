@@ -14,14 +14,14 @@ public class LoginDto {
 
     @NotNull
     @Size(min = 3,max = 50)
-    private String email;
+    private String username;
 
     @NotNull
     @Size(min = 3,max = 100)
     private String password;
 
     public UsernamePasswordAuthenticationToken toAuthentication() {
-        return new UsernamePasswordAuthenticationToken(email, password);
+        return new UsernamePasswordAuthenticationToken(username, password);
 
     }
 }

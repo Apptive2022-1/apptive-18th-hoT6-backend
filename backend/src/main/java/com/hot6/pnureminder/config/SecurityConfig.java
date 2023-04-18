@@ -5,6 +5,7 @@ import com.hot6.pnureminder.jwt.JwtAuthenticationEntryPoint;
 import com.hot6.pnureminder.jwt.JwtSecurityConfig;
 import com.hot6.pnureminder.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,22 +35,20 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CSRF 설정 Disable
         http.csrf().disable()
-
-            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-
             // exception handling 할 때 우리가 만든 클래스를 추가
             .exceptionHandling()
             .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .accessDeniedHandler(jwtAccessDeniedHandler)
 
+
             .and()
             .headers()
             .frameOptions()
-            .sameOrigin()
-
+            .disable()
+                .and()
+                .cors().disable()
             // 시큐리티는 기본적으로 세션을 사용
             // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
-            .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
@@ -57,8 +56,8 @@ public class SecurityConfig {
             .and()
             .authorizeHttpRequests()
             .requestMatchers("/auth/**").permitAll()
-                .requestMatchers(".").permitAll()
-//            .anyRequest().authenticated()
+                .requestMatchers("/api/**").authenticated()
+            .anyRequest().authenticated()
 
             .and()
             .apply(new JwtSecurityConfig(tokenProvider));

@@ -1,7 +1,7 @@
 # PNU 알리미 / PNU_reminder
 Customized services with the information &amp;amp; schedules and Finding nearest empty office location to user
 
-
+Jsprit (Based on TSP, VRP algorithm) + OpenStreet(Structure) in PNU(college campus)
 
 ## Server for creating and updating databases
 

@@ -51,3 +51,9 @@ Customized services with the information &amp;amp; schedules and Finding nearest
 ## AnnualPlan DB AutoBuild (03/26) Ver 1.1.0
 
 ![image](https://user-images.githubusercontent.com/81455273/228280016-498f8983-9bb4-46cb-89f2-eb622642d8d1.png)
+
+
+## Feature AnnualPlan Ver 2.0.0
+
+![image](https://user-images.githubusercontent.com/81455273/230697750-749c8c62-900d-4e7e-b696-345ed2bfe154.png)
+

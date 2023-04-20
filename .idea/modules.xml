@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/apptive-18th-team4.iml" filepath="$PROJECT_DIR$/.idea/apptive-18th-team4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.hot6.pnureminder.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.hot6.pnureminder.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/pnureminder.iml" filepath="$PROJECT_DIR$/.idea/modules/pnureminder.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pnureminder.main.iml" filepath="$PROJECT_DIR$/.idea/modules/pnureminder.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/pnureminder.test.iml" filepath="$PROJECT_DIR$/.idea/modules/pnureminder.test.iml" />
     </modules>
   </component>

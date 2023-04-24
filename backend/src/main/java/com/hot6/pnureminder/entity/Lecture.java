@@ -1,28 +1,38 @@
 package com.hot6.pnureminder.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.sql.Time;
 
 @Entity
 @Data
-@Table
+@Table(name = "lecture")
+@ToString(exclude = "lectureRoom")
 public class Lecture {
+
     @Id
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "building_num")
-    private Integer buildingNum;
-
-    @Column(name = "room_num")
-    private String roomNum;
     @Column(name = "start_time")
     private Time startTime;
+
     @Column(name = "run_time")
-    private Time runtime;
+    private Time runTime;
+
+    @Column(name = "day_of_week")
+    private Integer dayOfWeek;
+
+    @Column(name = "lecture_room_id")
+    private Integer lectureRoomId;
+
+    @ManyToOne
+    @JoinColumn(name = "lecture_room_id", insertable = false, updatable = false)
+    @JsonBackReference
+    private LectureRoom lectureRoom;
+
 }

@@ -1,6 +1,8 @@
 package com.hot6.pnureminder.controller;
 
+import com.hot6.pnureminder.dto.BuildingResponseDto;
 import com.hot6.pnureminder.entity.Building;
+import com.hot6.pnureminder.entity.LectureRoom;
 import com.hot6.pnureminder.service.BuildingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,16 @@ public class BuildingController {
             @RequestParam("user_longitude") double longitude) {
         return buildingService.findNearestBuildings(latitude, longitude);
     }
+    @GetMapping("/byloc")
+    public List<BuildingResponseDto> getNearestBuildingsWithAvailableLectureRoom(
+            @RequestParam("user_latitude") double latitude,
+            @RequestParam("user_longitude") double longitude,
+            @RequestParam("user_settime") int setMinutes
+    ) {
+        return buildingService.findNearestBuildingsWithAvailableLectureRooms(latitude, longitude, setMinutes);
+    }
+
+
 
     @GetMapping("/main")
     public ResponseEntity<String> tester(){

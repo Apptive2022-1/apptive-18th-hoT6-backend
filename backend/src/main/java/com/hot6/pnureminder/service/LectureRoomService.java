@@ -1,15 +1,10 @@
 package com.hot6.pnureminder.service;
 
-import com.hot6.pnureminder.dto.LectureDto;
 import com.hot6.pnureminder.dto.LectureRoomDto;
-import com.hot6.pnureminder.entity.Building;
-import com.hot6.pnureminder.entity.Lecture;
 import com.hot6.pnureminder.entity.LectureRoom;
-import com.hot6.pnureminder.repository.LectureRepository;
 import com.hot6.pnureminder.repository.LectureRoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -21,8 +16,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class LectureRoomService {
 
-    @Autowired
-    private LectureRoomRepository lectureRoomRepository;
+    private final LectureRoomRepository lectureRoomRepository;
 
     public List<LectureRoomDto> findAllByBuildingNum(Integer buildingNum) {
         List<LectureRoom> lectureRooms = lectureRoomRepository.findAllByBuildingNum(buildingNum);

@@ -2,7 +2,6 @@ package com.hot6.pnureminder.controller;
 
 import com.hot6.pnureminder.dto.MemberResponseDto;
 import com.hot6.pnureminder.service.MemberService;
-import com.hot6.pnureminder.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

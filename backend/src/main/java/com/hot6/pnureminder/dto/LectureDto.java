@@ -1,9 +1,6 @@
 package com.hot6.pnureminder.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.hot6.pnureminder.entity.Lecture;
-import com.hot6.pnureminder.entity.LectureRoom;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

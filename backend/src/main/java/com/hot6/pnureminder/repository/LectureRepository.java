@@ -8,4 +8,6 @@ import java.util.List;
 public interface LectureRepository extends JpaRepository<Lecture, Integer> {
 
     List<Lecture> findAllByLectureRoomId (Integer lectureRoomId);
+
+    List<Lecture> findAllByLectureRoomIdAndDayOfWeek(Integer lectureRoomId, Integer dayOfWeek);
 }

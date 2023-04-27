@@ -24,6 +24,13 @@ public class LectureService {
                 .map(LectureDto::toDto)
                 .collect(Collectors.toList());
     }
+    public List<LectureDto> findAllByLectureRoomIdAndDayOfWeek(Integer lectureRoomId, Integer dayOfWeek) {
+        List<Lecture> lectureRooms = lectureRepository.findAllByLectureRoomIdAndDayOfWeek(lectureRoomId, dayOfWeek);
+
+        return lectureRooms.stream()
+                .map(LectureDto::toDto)
+                .collect(Collectors.toList());
+    }
 
 }
 

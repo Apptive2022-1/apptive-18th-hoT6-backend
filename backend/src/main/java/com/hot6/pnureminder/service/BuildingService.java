@@ -54,30 +54,37 @@ public class BuildingService {
 
 //       현재시간 추출
 //       현재 시간에서 세팅한 시간을 더해서 마진을 만든다
-        ZonedDateTime endTime = currentTime.plus(setMinutes, ChronoUnit.MINUTES);
+        ZonedDateTime marginTime = currentTime.plus(setMinutes, ChronoUnit.MINUTES);
 
-//       현재요일 추출
-        int currentDayOfWeek = (DayOfWeek.from(LocalDate.now()).getValue())-1;
+//       현재요일 추출 테스트
+        //int currentDayOfWeek = (DayOfWeek.from(LocalDate.now()).getValue())-1;
+        int currentDayOfWeek = 0;
 
 //       강의실 리스트 가져와서(LectureRoom pk로) 비어있는 강의실 확인 후 리스트화
         List<LectureRoomDto> availableLectureRooms = new ArrayList<>();
 
         for (LectureRoomDto lectureRoomDto : lectureRooms) {
-            List<LectureDto> lecturesInRoom = lectureService.findAllByLectureRoomId(lectureRoomDto.getId());
+            //List<LectureDto> lecturesInRoom = lectureService.findAllByLectureRoomId(lectureRoomDto.getId());
+            List<LectureDto> lecturesInRoom = lectureService.findAllByLectureRoomIdAndDayOfWeek(lectureRoomDto.getId(),currentDayOfWeek);
 
-            boolean isAvailableRoom = true;
+            boolean isAvailableRoom = false;
 
             for (LectureDto lectureDto : lecturesInRoom) {
                 ZonedDateTime lectureStartTime = lectureDto.getStartTime().toLocalTime().atDate(LocalDate.now()).atZone(ZoneId.of("Asia/Seoul"));
                 ZonedDateTime lectureEndTime = lectureStartTime.plus(lectureDto.getRunTime().toLocalTime().getHour(), ChronoUnit.HOURS).plus(lectureDto.getRunTime().toLocalTime().getMinute(), ChronoUnit.MINUTES);
+
+
 //                요일이 같고 현재 시간이 강의 시간+세팅시간과 겹칠때 isAvailable false
-                if (lectureDto.getDayOfWeek() == currentDayOfWeek && (endTime.isAfter(lectureStartTime) && currentTime.isBefore(lectureEndTime))) {
-                    isAvailableRoom = false;
+                boolean isEmptyNow = (marginTime.isBefore(lectureStartTime) || currentTime.isAfter(lectureEndTime));
+                boolean isToday = lectureDto.getDayOfWeek() == currentDayOfWeek;
+                if ( isToday && isEmptyNow) {
+                    isAvailableRoom = true;
                     break;
                 }
             }
 
             if (isAvailableRoom) {
+                lectureRoomDto.getId()
                 availableLectureRooms.add(lectureRoomDto);
             }
         }

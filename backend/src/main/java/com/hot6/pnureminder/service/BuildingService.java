@@ -48,9 +48,36 @@ public class BuildingService {
                 .collect(Collectors.toList());
 
 // 가장 가까운 세 건물을 선택
-        return sortedBuildings.subList(0, Math.min(3, sortedBuildings.size()));
+        return sortedBuildings.subList(0, Math.min(5, sortedBuildings.size()));
     }
 
+    private Optional<Lecture> isLectureRoomAvailable(List<Lecture> lecturesInRoom, ZonedDateTime currentTime, ZonedDateTime marginTime) {
+        Time tempTime = Time.valueOf("23:59:00");
+        Lecture earliestLecture = null;
+
+        for (Lecture lecture : lecturesInRoom) {
+            ZonedDateTime lectureStartTime = DateTimeUtilsForTest.getLectureStartTime(lecture);
+            ZonedDateTime lectureEndTime = DateTimeUtilsForTest.getLectureEndTime(lecture);
+
+            boolean isFinish = currentTime.isAfter(lectureEndTime);
+            if (isFinish) {
+                continue;
+            }
+
+            boolean isStartWithMarginTime = marginTime.isAfter(lectureStartTime);
+            if (isStartWithMarginTime) {
+                return Optional.empty();
+            }
+
+            Time thisLectureStartTime = lecture.getStartTime();
+            if (thisLectureStartTime.before(tempTime)) {
+                earliestLecture = lecture;
+                tempTime = thisLectureStartTime;
+            }
+        }
+
+        return Optional.ofNullable(earliestLecture);
+    }
 
     //건물이 주어졌을때 현재 시각, 지정한 시간, 요일을 가져와서 가능한 강의실 추출
     public List<LectureRoomDto> findAvailableLectureRoomsWithSetTime(Building building, int setMinutes, ZonedDateTime currentTime) {
@@ -71,36 +98,12 @@ public class BuildingService {
             //List<LectureDto> lecturesInRoom = lectureService.findAllByLectureRoomId(lectureRoom.getId());
             List<Lecture> lecturesInRoom = lectureService.findAllByLectureRoomIdAndDayOfWeek(lectureRoom.getId(), currentDayOfWeek);
 
-            boolean isAvailableRoom = false;
+            Optional<Lecture> earliestLecture = isLectureRoomAvailable(lecturesInRoom, currentTime, marginTime);
 
-            int earliestLectureId =0;
-
-            Time tempTime = Time.valueOf("23:59:00");
-            for (Lecture lecture : lecturesInRoom) {
-                //test
-                ZonedDateTime lectureStartTime = DateTimeUtilsForTest.getLectureStartTime(lecture);
-                ZonedDateTime lectureEndTime = DateTimeUtilsForTest.getLectureEndTime(lecture);
-
-//                요일이 같고 현재 시간이 강의 시간+세팅시간과 겹칠때 isAvailable false
-                boolean isNotStart = marginTime.isBefore(lectureStartTime);
-                boolean isFinish = currentTime.isAfter(lectureEndTime);
-
-                Time thisLectureStartTime = lecture.getStartTime();
-
-                if (isNotStart && !isFinish) {
-                    isAvailableRoom=true;
-                    if (thisLectureStartTime.before(tempTime)) {
-                        earliestLectureId = lecture.getId();
-                        tempTime= thisLectureStartTime;
-                    }
-
-                }
-            }
-
-            if (isAvailableRoom) {
-                LectureRoomDto updatedLectureRoomDto = LectureRoomDto.toDto(lectureRoom, lectureService.findLectureById(earliestLectureId));
+            earliestLecture.ifPresent(lecture -> {
+                LectureRoomDto updatedLectureRoomDto = LectureRoomDto.toDto(lectureRoom, lecture);
                 availableLectureRooms.add(updatedLectureRoomDto);
-            }
+            });
 
         }
 
@@ -113,7 +116,6 @@ public class BuildingService {
 
         //test
         ZonedDateTime currentTime = DateTimeUtilsForTest.getCurrentSeoulTime();
-
         for (Building building : nearestBuildings) {
             List<LectureRoomDto> availableLectureRooms = findAvailableLectureRoomsWithSetTime(building, setMinutes, currentTime);
             BuildingResponseDto buildingResponseDto = BuildingResponseDto.toDto(building, availableLectureRooms);

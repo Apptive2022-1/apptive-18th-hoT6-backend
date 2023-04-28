@@ -18,12 +18,10 @@ public class LectureRoomService {
 
     private final LectureRoomRepository lectureRoomRepository;
 
-    public List<LectureRoomDto> findAllByBuildingNum(Integer buildingNum) {
+    public List<LectureRoom> findAllByBuildingNum(Integer buildingNum) {
         List<LectureRoom> lectureRooms = lectureRoomRepository.findAllByBuildingNum(buildingNum);
 
-        return lectureRooms.stream()
-                .map(LectureRoomDto::toDto)
-                .collect(Collectors.toList());
+        return lectureRooms;
     }
 
 }

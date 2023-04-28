@@ -8,18 +8,20 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class DateTimeUtils {
+public class DateTimeUtilsForTest {
+
+    private static LocalDateTime localDateTestTime = LocalDateTime.of(2023, 4, 24, 13, 00);
+
 
     public static ZonedDateTime getCurrentSeoulTime() {
         ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZonedDateTime seoulZonedDateTime = localDateTime.atZone(seoulZoneId);
+        ZonedDateTime seoulZonedDateTime = localDateTestTime.atZone(seoulZoneId);
         return seoulZonedDateTime;
     }
 
     public static ZonedDateTime getLectureStartTime(Lecture lecture) {
         ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
-        return lecture.getStartTime().toLocalTime().atDate(LocalDate.now()).atZone(seoulZoneId);
+        return lecture.getStartTime().toLocalTime().atDate(localDateTestTime.toLocalDate()).atZone(seoulZoneId);
     }
 
     public static ZonedDateTime getLectureEndTime(Lecture lecture) {

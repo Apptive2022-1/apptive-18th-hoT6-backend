@@ -4,13 +4,17 @@ import com.hot6.pnureminder.dto.BuildingResponseDto;
 import com.hot6.pnureminder.dto.LectureDto;
 import com.hot6.pnureminder.dto.LectureRoomDto;
 import com.hot6.pnureminder.entity.Building;
+import com.hot6.pnureminder.entity.Lecture;
+import com.hot6.pnureminder.entity.LectureRoom;
 import com.hot6.pnureminder.repository.BuildingRepository;
 import com.hot6.pnureminder.util.DateTimeUtils;
+import com.hot6.pnureminder.util.DateTimeUtilsForTest;
 import com.hot6.pnureminder.util.haversineDistance;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -50,10 +54,9 @@ public class BuildingService {
 
     //건물이 주어졌을때 현재 시각, 지정한 시간, 요일을 가져와서 가능한 강의실 추출
     public List<LectureRoomDto> findAvailableLectureRoomsWithSetTime(Building building, int setMinutes, ZonedDateTime currentTime) {
-        List<LectureRoomDto> lectureRooms = lectureRoomService.findAllByBuildingNum(building.getBuildingNum());
+        List<LectureRoom> lectureRooms = lectureRoomService.findAllByBuildingNum(building.getBuildingNum());
 
-//       현재시간 추출
-//       현재 시간에서 세팅한 시간을 더해서 마진을 만든다
+        //       현재 시간에서 세팅한 시간을 더해서 마진을 만든다
         ZonedDateTime marginTime = currentTime.plus(setMinutes, ChronoUnit.MINUTES);
 
 //       현재요일 추출 테스트
@@ -63,46 +66,58 @@ public class BuildingService {
 //       강의실 리스트 가져와서(LectureRoom pk로) 비어있는 강의실 확인 후 리스트화
         List<LectureRoomDto> availableLectureRooms = new ArrayList<>();
 
-        for (LectureRoomDto lectureRoomDto : lectureRooms) {
-            //List<LectureDto> lecturesInRoom = lectureService.findAllByLectureRoomId(lectureRoomDto.getId());
-            List<LectureDto> lecturesInRoom = lectureService.findAllByLectureRoomIdAndDayOfWeek(lectureRoomDto.getId(),currentDayOfWeek);
+
+        for (LectureRoom lectureRoom : lectureRooms) {
+            //List<LectureDto> lecturesInRoom = lectureService.findAllByLectureRoomId(lectureRoom.getId());
+            List<Lecture> lecturesInRoom = lectureService.findAllByLectureRoomIdAndDayOfWeek(lectureRoom.getId(), currentDayOfWeek);
 
             boolean isAvailableRoom = false;
 
-            for (LectureDto lectureDto : lecturesInRoom) {
-                ZonedDateTime lectureStartTime = lectureDto.getStartTime().toLocalTime().atDate(LocalDate.now()).atZone(ZoneId.of("Asia/Seoul"));
-                ZonedDateTime lectureEndTime = lectureStartTime.plus(lectureDto.getRunTime().toLocalTime().getHour(), ChronoUnit.HOURS).plus(lectureDto.getRunTime().toLocalTime().getMinute(), ChronoUnit.MINUTES);
+            int earliestLectureId =0;
 
+            Time tempTime = Time.valueOf("23:59:00");
+            for (Lecture lecture : lecturesInRoom) {
+                //test
+                ZonedDateTime lectureStartTime = DateTimeUtilsForTest.getLectureStartTime(lecture);
+                ZonedDateTime lectureEndTime = DateTimeUtilsForTest.getLectureEndTime(lecture);
 
 //                요일이 같고 현재 시간이 강의 시간+세팅시간과 겹칠때 isAvailable false
-                boolean isEmptyNow = (marginTime.isBefore(lectureStartTime) || currentTime.isAfter(lectureEndTime));
-                boolean isToday = lectureDto.getDayOfWeek() == currentDayOfWeek;
-                if ( isToday && isEmptyNow) {
-                    isAvailableRoom = true;
-                    break;
+                boolean isNotStart = marginTime.isBefore(lectureStartTime);
+                boolean isFinish = currentTime.isAfter(lectureEndTime);
+
+                Time thisLectureStartTime = lecture.getStartTime();
+
+                if (isNotStart && !isFinish) {
+                    isAvailableRoom=true;
+                    if (thisLectureStartTime.before(tempTime)) {
+                        earliestLectureId = lecture.getId();
+                        tempTime= thisLectureStartTime;
+                    }
+
                 }
             }
 
             if (isAvailableRoom) {
-                lectureRoomDto.getId()
-                availableLectureRooms.add(lectureRoomDto);
+                LectureRoomDto updatedLectureRoomDto = LectureRoomDto.toDto(lectureRoom, lectureService.findLectureById(earliestLectureId));
+                availableLectureRooms.add(updatedLectureRoomDto);
             }
+
         }
 
         return availableLectureRooms;
-    }
 
+    }
     public List<BuildingResponseDto> findNearestBuildingsWithAvailableLectureRooms(double latitude, double longitude, int setMinutes) {
         List<Building> nearestBuildings = findNearestBuildings(latitude, longitude);
         List<BuildingResponseDto> buildingResponseDtoList = new ArrayList<>();
 
-        ZonedDateTime currentTime = DateTimeUtils.getCurrentSeoulTime();
+        //test
+        ZonedDateTime currentTime = DateTimeUtilsForTest.getCurrentSeoulTime();
 
         for (Building building : nearestBuildings) {
             List<LectureRoomDto> availableLectureRooms = findAvailableLectureRoomsWithSetTime(building, setMinutes, currentTime);
             BuildingResponseDto buildingResponseDto = BuildingResponseDto.toDto(building, availableLectureRooms);
             buildingResponseDtoList.add(buildingResponseDto);
-            System.out.println(availableLectureRooms);
         }
         return buildingResponseDtoList;
     }

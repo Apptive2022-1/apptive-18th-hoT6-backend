@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,12 +25,16 @@ public class LectureService {
                 .map(LectureDto::toDto)
                 .collect(Collectors.toList());
     }
-    public List<LectureDto> findAllByLectureRoomIdAndDayOfWeek(Integer lectureRoomId, Integer dayOfWeek) {
+    public List<Lecture> findAllByLectureRoomIdAndDayOfWeek(Integer lectureRoomId, Integer dayOfWeek) {
         List<Lecture> lectureRooms = lectureRepository.findAllByLectureRoomIdAndDayOfWeek(lectureRoomId, dayOfWeek);
 
-        return lectureRooms.stream()
-                .map(LectureDto::toDto)
-                .collect(Collectors.toList());
+        return lectureRooms;
+    }
+
+    public Optional<Lecture> findLectureById (Integer id){
+        Optional<Lecture> lecture = lectureRepository.findLectureById(id);
+
+        return lecture;
     }
 
 }

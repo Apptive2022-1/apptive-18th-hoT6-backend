@@ -29,12 +29,12 @@ public class LectureRoomDto {
         );
     }
 
-    public static LectureRoomDto toDto(LectureRoom lectureRoom, Optional<Lecture> earliestStartLecture) {
+    public static LectureRoomDto toDto(LectureRoom lectureRoom, Lecture earliestStartLecture) {
         return new LectureRoomDto(
                 lectureRoom.getId(),
                 lectureRoom.getRoomNum(),
                 null,
-                earliestStartLecture.orElse(null)
+                earliestStartLecture
         );
     }
 

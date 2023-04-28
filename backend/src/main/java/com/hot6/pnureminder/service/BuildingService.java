@@ -2,6 +2,7 @@ package com.hot6.pnureminder.service;
 
 import com.hot6.pnureminder.dto.BuildingResponseDto;
 import com.hot6.pnureminder.dto.LectureDto;
+import com.hot6.pnureminder.dto.LectureInfoDto;
 import com.hot6.pnureminder.dto.LectureRoomDto;
 import com.hot6.pnureminder.entity.Building;
 import com.hot6.pnureminder.entity.Lecture;
@@ -12,6 +13,7 @@ import com.hot6.pnureminder.util.DateTimeUtilsForTest;
 import com.hot6.pnureminder.util.haversineDistance;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
@@ -54,6 +56,8 @@ public class BuildingService {
     private Optional<Lecture> isLectureRoomAvailable(List<Lecture> lecturesInRoom, ZonedDateTime currentTime, ZonedDateTime marginTime) {
         Time tempTime = Time.valueOf("23:59:00");
         Lecture earliestLecture = null;
+        boolean isMarginTimeLecture = false;
+
 
         for (Lecture lecture : lecturesInRoom) {
             ZonedDateTime lectureStartTime = DateTimeUtilsForTest.getLectureStartTime(lecture);
@@ -66,7 +70,7 @@ public class BuildingService {
 
             boolean isStartWithMarginTime = marginTime.isAfter(lectureStartTime);
             if (isStartWithMarginTime) {
-                return Optional.empty();
+
             }
 
             Time thisLectureStartTime = lecture.getStartTime();
@@ -98,8 +102,9 @@ public class BuildingService {
             //List<LectureDto> lecturesInRoom = lectureService.findAllByLectureRoomId(lectureRoom.getId());
             List<Lecture> lecturesInRoom = lectureService.findAllByLectureRoomIdAndDayOfWeek(lectureRoom.getId(), currentDayOfWeek);
 
-            Optional<Lecture> earliestLecture = isLectureRoomAvailable(lecturesInRoom, currentTime, marginTime);
+            LectureInfoDto lectureInfoDto = isLectureRoomAvailable(lecturesInRoom, currentTime, marginTime);
 
+            Lecture earliestLecture = lectureInfoDto.getE
             earliestLecture.ifPresent(lecture -> {
                 LectureRoomDto updatedLectureRoomDto = LectureRoomDto.toDto(lectureRoom, lecture);
                 availableLectureRooms.add(updatedLectureRoomDto);
@@ -110,17 +115,29 @@ public class BuildingService {
         return availableLectureRooms;
 
     }
+
     public List<BuildingResponseDto> findNearestBuildingsWithAvailableLectureRooms(double latitude, double longitude, int setMinutes) {
         List<Building> nearestBuildings = findNearestBuildings(latitude, longitude);
         List<BuildingResponseDto> buildingResponseDtoList = new ArrayList<>();
 
         //test
         ZonedDateTime currentTime = DateTimeUtilsForTest.getCurrentSeoulTime();
+        int addedBuildingsCount = 0;
+
         for (Building building : nearestBuildings) {
+            if (addedBuildingsCount >= 3) {
+                break;
+            }
+
             List<LectureRoomDto> availableLectureRooms = findAvailableLectureRoomsWithSetTime(building, setMinutes, currentTime);
-            BuildingResponseDto buildingResponseDto = BuildingResponseDto.toDto(building, availableLectureRooms);
-            buildingResponseDtoList.add(buildingResponseDto);
+
+            if (availableLectureRooms != null && !availableLectureRooms.isEmpty()) {
+                BuildingResponseDto buildingResponseDto = BuildingResponseDto.toDto(building, availableLectureRooms);
+                buildingResponseDtoList.add(buildingResponseDto);
+                addedBuildingsCount++;
+            }
         }
+
         return buildingResponseDtoList;
     }
 }

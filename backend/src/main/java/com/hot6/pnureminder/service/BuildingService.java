@@ -1,19 +1,16 @@
 package com.hot6.pnureminder.service;
 
 import com.hot6.pnureminder.dto.BuildingResponseDto;
-import com.hot6.pnureminder.dto.LectureDto;
 import com.hot6.pnureminder.dto.LectureInfoDto;
 import com.hot6.pnureminder.dto.LectureRoomDto;
 import com.hot6.pnureminder.entity.Building;
 import com.hot6.pnureminder.entity.Lecture;
 import com.hot6.pnureminder.entity.LectureRoom;
 import com.hot6.pnureminder.repository.BuildingRepository;
-import com.hot6.pnureminder.util.DateTimeUtils;
 import com.hot6.pnureminder.util.DateTimeUtilsForTest;
 import com.hot6.pnureminder.util.haversineDistance;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
@@ -53,7 +50,7 @@ public class BuildingService {
         return sortedBuildings.subList(0, Math.min(5, sortedBuildings.size()));
     }
 
-    private Optional<Lecture> isLectureRoomAvailable(List<Lecture> lecturesInRoom, ZonedDateTime currentTime, ZonedDateTime marginTime) {
+    private Optional<LectureInfoDto> isLectureRoomAvailable(List<Lecture> lecturesInRoom, ZonedDateTime currentTime, ZonedDateTime marginTime) {
         Time tempTime = Time.valueOf("23:59:00");
         Lecture earliestLecture = null;
         boolean isMarginTimeLecture = false;
@@ -70,7 +67,9 @@ public class BuildingService {
 
             boolean isStartWithMarginTime = marginTime.isAfter(lectureStartTime);
             if (isStartWithMarginTime) {
-
+                isMarginTimeLecture = true;
+                earliestLecture = lecture;
+                break;
             }
 
             Time thisLectureStartTime = lecture.getStartTime();
@@ -80,7 +79,7 @@ public class BuildingService {
             }
         }
 
-        return Optional.ofNullable(earliestLecture);
+        return Optional.ofNullable(earliestLecture != null ? new LectureInfoDto(earliestLecture, isMarginTimeLecture) : null);
     }
 
     //건물이 주어졌을때 현재 시각, 지정한 시간, 요일을 가져와서 가능한 강의실 추출
@@ -102,15 +101,20 @@ public class BuildingService {
             //List<LectureDto> lecturesInRoom = lectureService.findAllByLectureRoomId(lectureRoom.getId());
             List<Lecture> lecturesInRoom = lectureService.findAllByLectureRoomIdAndDayOfWeek(lectureRoom.getId(), currentDayOfWeek);
 
-            LectureInfoDto lectureInfoDto = isLectureRoomAvailable(lecturesInRoom, currentTime, marginTime);
+            Optional<LectureInfoDto> lectureInfoDtoOptional  = isLectureRoomAvailable(lecturesInRoom, currentTime, marginTime);
 
-            Lecture earliestLecture = lectureInfoDto.getE
-            earliestLecture.ifPresent(lecture -> {
-                LectureRoomDto updatedLectureRoomDto = LectureRoomDto.toDto(lectureRoom, lecture);
+//            LectureDto lectureDto = lectureInfoDto.getLectureDto();
+//            boolean isMarginTimeLecture = lectureInfoDto.isMarginTimeLecture();
+
+            lectureInfoDtoOptional.ifPresent(lectureInfoDto -> {
+                LectureRoomDto updatedLectureRoomDto = LectureRoomDto.toDto(lectureRoom, lectureInfoDto);
                 availableLectureRooms.add(updatedLectureRoomDto);
             });
+                // 조건문을 사용하여 isMarginTimeLecture 값에 따라 처리할 수도 있다.
+                // 하지만 프론트에 isMarginTimeLecture 가 True인지 False 여부를 보내기로함.
 
-        }
+            }
+
 
         return availableLectureRooms;
 

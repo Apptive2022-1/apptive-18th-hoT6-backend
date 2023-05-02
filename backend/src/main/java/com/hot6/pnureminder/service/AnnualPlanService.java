@@ -5,10 +5,8 @@ import com.hot6.pnureminder.dto.MemberResponseDto;
 import com.hot6.pnureminder.entity.AnnualPlan;
 import com.hot6.pnureminder.repository.AnnualPlanRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,8 +18,7 @@ import java.util.stream.Collectors;
 public class AnnualPlanService {
 
     private final AnnualPlanRepository annualPlanRepository;
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     public MemberResponseDto findMemberInfoByUsername(String username) {
         return customUserDetailsService.findMemberInfoByUsername(username);

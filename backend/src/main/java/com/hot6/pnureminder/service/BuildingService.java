@@ -50,36 +50,49 @@ public class BuildingService {
         return sortedBuildings.subList(0, Math.min(5, sortedBuildings.size()));
     }
 
-    private Optional<LectureInfoDto> isLectureRoomAvailable(List<Lecture> lecturesInRoom, ZonedDateTime currentTime, ZonedDateTime marginTime) {
+    private Optional<LectureInfoDto> isLectureRoomAvailable(List<Lecture> lecturesInRoom, ZonedDateTime currentTime, ZonedDateTime startMargin, ZonedDateTime finishMargin) {
         Time tempTime = Time.valueOf("23:59:00");
-        Lecture earliestLecture = null;
-        boolean isMarginTimeLecture = false;
+        ZonedDateTime inProgressLectureEndTime = null;
+        //진행중이거나, 가장 빠르거나
+        Lecture objectiveLecture = null;
+
+        boolean isStartMarginLecture = false;
+        boolean isInProgressLecture = false;
 
 
         for (Lecture lecture : lecturesInRoom) {
             ZonedDateTime lectureStartTime = DateTimeUtilsForTest.getLectureStartTime(lecture);
             ZonedDateTime lectureEndTime = DateTimeUtilsForTest.getLectureEndTime(lecture);
 
+            boolean isStartWithStartMarginTime = startMargin.isAfter(lectureStartTime);
             boolean isFinish = currentTime.isAfter(lectureEndTime);
+            boolean isInProgress = currentTime.isAfter(lectureStartTime) && currentTime.isBefore(lectureEndTime);
+            boolean isFinishWithFinishMarginTime = finishMargin.isAfter(lectureStartTime);
+
             if (isFinish) {
                 continue;
             }
 
-            boolean isStartWithMarginTime = marginTime.isAfter(lectureStartTime);
-            if (isStartWithMarginTime) {
-                isMarginTimeLecture = true;
-                earliestLecture = lecture;
+            if (isInProgress) {
+                isInProgressLecture = true;
+                inProgressLectureEndTime = lectureEndTime;
+                continue;
+            }
+
+            if (isStartWithStartMarginTime) {
+                isStartMarginLecture = true;
+                objectiveLecture = lecture;
                 break;
             }
 
             Time thisLectureStartTime = lecture.getStartTime();
             if (thisLectureStartTime.before(tempTime)) {
-                earliestLecture = lecture;
+                objectiveLecture = lecture;
                 tempTime = thisLectureStartTime;
             }
         }
 
-        return Optional.ofNullable(earliestLecture != null ? new LectureInfoDto(earliestLecture, isMarginTimeLecture) : null);
+        return Optional.ofNullable(objectiveLecture != null ? new LectureInfoDto(objectiveLecture, isStartMarginLecture, isInProgressLecture, inProgressLectureEndTime) : null);
     }
 
     //건물이 주어졌을때 현재 시각, 지정한 시간, 요일을 가져와서 가능한 강의실 추출
@@ -87,7 +100,8 @@ public class BuildingService {
         List<LectureRoom> lectureRooms = lectureRoomService.findAllByBuildingNum(building.getBuildingNum());
 
         //       현재 시간에서 세팅한 시간을 더해서 마진을 만든다
-        ZonedDateTime marginTime = currentTime.plus(setMinutes, ChronoUnit.MINUTES);
+        ZonedDateTime startMargin = currentTime.plus(setMinutes, ChronoUnit.MINUTES);
+        ZonedDateTime finishMargin = currentTime.plus(setMinutes, ChronoUnit.MINUTES);
 
 //       현재요일 추출 테스트
         //int currentDayOfWeek = (DayOfWeek.from(LocalDate.now()).getValue())-1;
@@ -101,17 +115,13 @@ public class BuildingService {
             //List<LectureDto> lecturesInRoom = lectureService.findAllByLectureRoomId(lectureRoom.getId());
             List<Lecture> lecturesInRoom = lectureService.findAllByLectureRoomIdAndDayOfWeek(lectureRoom.getId(), currentDayOfWeek);
 
-            Optional<LectureInfoDto> lectureInfoDtoOptional  = isLectureRoomAvailable(lecturesInRoom, currentTime, marginTime);
+            Optional<LectureInfoDto> lectureInfoDtoOptional  = isLectureRoomAvailable(lecturesInRoom, currentTime, startMargin, finishMargin);
 
-//            LectureDto lectureDto = lectureInfoDto.getLectureDto();
-//            boolean isMarginTimeLecture = lectureInfoDto.isMarginTimeLecture();
 
             lectureInfoDtoOptional.ifPresent(lectureInfoDto -> {
                 LectureRoomDto updatedLectureRoomDto = LectureRoomDto.toDto(lectureRoom, lectureInfoDto);
                 availableLectureRooms.add(updatedLectureRoomDto);
             });
-                // 조건문을 사용하여 isMarginTimeLecture 값에 따라 처리할 수도 있다.
-                // 하지만 프론트에 isMarginTimeLecture 가 True인지 False 여부를 보내기로함.
 
             }
 

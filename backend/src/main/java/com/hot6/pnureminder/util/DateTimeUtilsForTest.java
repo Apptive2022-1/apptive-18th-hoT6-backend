@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 
 public class DateTimeUtilsForTest {
 
-    private static LocalDateTime localDateTestTime = LocalDateTime.of(2023, 4, 24, 13, 00);
+    private static LocalDateTime localDateTestTime = LocalDateTime.of(2023, 4, 24, 13, 40);
 
 
     public static ZonedDateTime getCurrentSeoulTime() {

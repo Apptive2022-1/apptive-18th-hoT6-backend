@@ -2,6 +2,7 @@ package com.hot6.pnureminder.util;
 
 import com.hot6.pnureminder.entity.Lecture;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -10,13 +11,18 @@ import java.time.temporal.ChronoUnit;
 
 public class DateTimeUtilsForTest {
 
-    private static LocalDateTime localDateTestTime = LocalDateTime.of(2023, 4, 24, 13, 40);
+    private static LocalDateTime localDateTestTime = LocalDateTime.of(2023, 4, 24, 14, 40);
 
 
     public static ZonedDateTime getCurrentSeoulTime() {
         ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
         ZonedDateTime seoulZonedDateTime = localDateTestTime.atZone(seoulZoneId);
         return seoulZonedDateTime;
+    }
+
+    public static ZonedDateTime getTempTime() {
+        ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
+        return Time.valueOf("23:59:00").toLocalTime().atDate(localDateTestTime.toLocalDate()).atZone(seoulZoneId);
     }
 
     public static ZonedDateTime getLectureStartTime(Lecture lecture) {

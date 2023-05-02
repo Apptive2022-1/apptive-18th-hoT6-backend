@@ -51,7 +51,7 @@ public class BuildingService {
     }
 
     private Optional<LectureInfoDto> isLectureRoomAvailable(List<Lecture> lecturesInRoom, ZonedDateTime currentTime, ZonedDateTime startMargin, ZonedDateTime finishMargin) {
-        Time tempTime = Time.valueOf("23:59:00");
+        ZonedDateTime tempTime = DateTimeUtilsForTest.getTempTime();
         ZonedDateTime inProgressLectureEndTime = null;
         //진행중이거나, 가장 빠르거나
         Lecture objectiveLecture = null;
@@ -67,15 +67,20 @@ public class BuildingService {
             boolean isStartWithStartMarginTime = startMargin.isAfter(lectureStartTime);
             boolean isFinish = currentTime.isAfter(lectureEndTime);
             boolean isInProgress = currentTime.isAfter(lectureStartTime) && currentTime.isBefore(lectureEndTime);
-            boolean isFinishWithFinishMarginTime = finishMargin.isAfter(lectureStartTime);
+            boolean isFinishWithFinishMarginTime = finishMargin.isAfter(lectureEndTime);
+            boolean isEarliestThanTempTime = lectureStartTime.isBefore(tempTime);
 
+            //끝났으면 continue
             if (isFinish) {
                 continue;
             }
 
+            //진행중이고 지정한 시간내 수업이 끝난다면
             if (isInProgress) {
                 isInProgressLecture = true;
-                inProgressLectureEndTime = lectureEndTime;
+                if (isFinishWithFinishMarginTime) {
+                    inProgressLectureEndTime = lectureEndTime;
+                }
                 continue;
             }
 
@@ -85,10 +90,9 @@ public class BuildingService {
                 break;
             }
 
-            Time thisLectureStartTime = lecture.getStartTime();
-            if (thisLectureStartTime.before(tempTime)) {
+            if (isEarliestThanTempTime) {
                 objectiveLecture = lecture;
-                tempTime = thisLectureStartTime;
+                tempTime = lectureStartTime;
             }
         }
 

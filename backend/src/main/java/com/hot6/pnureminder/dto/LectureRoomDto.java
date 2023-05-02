@@ -1,13 +1,10 @@
 package com.hot6.pnureminder.dto;
 
-import com.hot6.pnureminder.entity.Lecture;
 import com.hot6.pnureminder.entity.LectureRoom;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -15,35 +12,39 @@ import java.util.stream.Collectors;
 public class LectureRoomDto {
     private Integer id;
     private String roomNum;
-    private List<Lecture> lectures;
-    private Lecture earliestStartLecture;
+    private List<LectureDto> lectures;
+    private LectureInfoDto earliestLectureInfoDto;
 
 
     public static LectureRoomDto toDto(LectureRoom lectureRoom){
 
+        List<LectureDto> lectureDtos = lectureRoom.getLectures().stream()
+                .map(LectureDto::toDto)
+                .collect(Collectors.toList());
+
         return new LectureRoomDto(
                 lectureRoom.getId(),
                 lectureRoom.getRoomNum(),
-                lectureRoom.getLectures(),
+                lectureDtos,
                 null
         );
     }
 
-    public static LectureRoomDto toDto(LectureRoom lectureRoom, Lecture earliestStartLecture) {
+    public static LectureRoomDto toDto(LectureRoom lectureRoom, LectureInfoDto earliestLectureInfoDto) {
         return new LectureRoomDto(
                 lectureRoom.getId(),
                 lectureRoom.getRoomNum(),
                 null,
-                earliestStartLecture
+                earliestLectureInfoDto
         );
     }
 
-    // 기본 생성자는 private으로 설정하여 외부에서 호출되지 않도록 한다.
-    private LectureRoomDto(Integer id, String roomNum, List<Lecture> lectures, Lecture earliestStartLecture) {
+    // 기본 생성자는 private로 설정하여 외부에서 호출되지 않도록 한다.
+    private LectureRoomDto(Integer id, String roomNum, List<LectureDto> lectures, LectureInfoDto earliestLectureInfoDto) {
         this.id = id;
         this.roomNum = roomNum;
         this.lectures = lectures;
-        this.earliestStartLecture = earliestStartLecture;
+        this.earliestLectureInfoDto = earliestLectureInfoDto;
     }
 
 

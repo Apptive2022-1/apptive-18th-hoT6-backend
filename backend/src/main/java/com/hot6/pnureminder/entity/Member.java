@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//local test용
 @Table(name = "remindersers")
 public class Member implements UserDetails {
     @Id
@@ -44,11 +43,12 @@ public class Member implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
+            joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+
     private Set<Role> roles = new HashSet<>();
 
-//    유저가 가지고 있는 Role 객체를 이용하여 SimpleGrantedAuthority 객체를 생성하고, Stream을 이용하여 Collection 형태로 반환
+    //    유저가 가지고 있는 Role 객체를 이용하여 SimpleGrantedAuthority 객체를 생성하고, Stream을 이용하여 Collection 형태로 반환
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()

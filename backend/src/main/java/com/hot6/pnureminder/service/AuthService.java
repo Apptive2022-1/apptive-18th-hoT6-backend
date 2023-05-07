@@ -3,9 +3,11 @@ package com.hot6.pnureminder.service;
 import com.hot6.pnureminder.dto.*;
 import com.hot6.pnureminder.entity.Member;
 import com.hot6.pnureminder.entity.RefreshToken;
+import com.hot6.pnureminder.entity.Role;
 import com.hot6.pnureminder.jwt.TokenProvider;
 import com.hot6.pnureminder.repository.MemberRepository;
 import com.hot6.pnureminder.repository.RefreshTokenRepository;
+import com.hot6.pnureminder.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,23 +16,33 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
+            Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
+                    () -> new RuntimeException("Error: Role is not found.")
+            );
+
         if (memberRepository.existsByUsername(memberRequestDto.getUsername())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
-        return MemberResponseDto.toDto(memberRepository.save(member));
+        member.setRoles(Collections.singleton(userRole));
+
+            return MemberResponseDto.toDto(memberRepository.save(member));
+
     }
 
     @Transactional

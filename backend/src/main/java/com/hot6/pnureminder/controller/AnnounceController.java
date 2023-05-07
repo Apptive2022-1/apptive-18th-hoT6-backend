@@ -26,5 +26,4 @@ public class AnnounceController {
 
     private final AnnualPlanService annualPlanService;
     private final MemberService memberService;
-
 }

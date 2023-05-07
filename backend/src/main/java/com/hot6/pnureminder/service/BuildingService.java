@@ -13,7 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
+import java.math.BigDecimal;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -32,23 +32,40 @@ public class BuildingService {
 
 
     public List<Building> findNearestBuildings(double latitude, double longitude) {
-        List<Building> buildings = buildingRepository.findAll();
+        List<Object[]> results = buildingRepository.findNearestBuildingsWithDistance(latitude, longitude);
 
-        Map<Building, Double> buildingDistances = new ConcurrentHashMap<>();
+        // 거리에 따라 건물을 정렬하고 가장 가까운 세 건물을 선택
+        return results.stream()
+                .map(result -> {
+                    Building building = new Building();
+                    building.setBuildingNum((Integer) result[0]);
+                    building.setBuildingName((String) result[1]);
+                    building.setBuildingLat(((BigDecimal) result[2]).doubleValue());
+                    building.setBuildingLng(((BigDecimal) result[3]).doubleValue());
+                    // 필요한 나머지 필드를 여기에 추가하십시오.
 
-        for (Building building : buildings) {
-            double distance = haversineDistance.getDistance(latitude, longitude, building.getBuildingLat(), building.getBuildingLng());
-            buildingDistances.put(building, distance);
-        }
-
-// 거리에 따라 건물을 정렬
-        List<Building> sortedBuildings = buildings.stream()
-                .sorted(Comparator.comparing(buildingDistances::get))
+                    return building;
+                })
+                .limit(5)
                 .collect(Collectors.toList());
-
-// 가장 가까운 세 건물을 선택
-        return sortedBuildings.subList(0, Math.min(5, sortedBuildings.size()));
     }
+//        List<Building> buildings = buildingRepository.findAll();
+//
+//        Map<Building, Double> buildingDistances = new ConcurrentHashMap<>();
+//
+//        for (Building building : buildings) {
+//            double distance = haversineDistance.getDistance(latitude, longitude, building.getBuildingLat(), building.getBuildingLng());
+//            buildingDistances.put(building, distance);
+//        }
+//
+//// 거리에 따라 건물을 정렬
+//        List<Building> sortedBuildings = buildings.stream()
+//                .sorted(Comparator.comparing(buildingDistances::get))
+//                .collect(Collectors.toList());
+//
+//// 가장 가까운 세 건물을 선택
+//        return sortedBuildings.subList(0, Math.min(5, sortedBuildings.size()));
+//    }
 
     private Optional<LectureInfoDto> isLectureRoomAvailable(List<Lecture> lecturesInRoom, ZonedDateTime currentTime, ZonedDateTime startMargin, ZonedDateTime finishMargin) {
         ZonedDateTime tempTime = DateTimeUtilsForTest.getTempTime();

@@ -17,4 +17,10 @@ public class MemberService {
     public MemberResponseDto findMemberInfoByUsername(String username) {
         return customUserDetailsService.findMemberInfoByUsername(username);
     }
+
+    public Integer findMemberStateByUsername(String username) {
+        MemberResponseDto member = customUserDetailsService.findMemberInfoByUsername(username);
+
+        return member.getState();
+    }
 }

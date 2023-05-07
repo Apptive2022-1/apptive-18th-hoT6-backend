@@ -20,9 +20,6 @@ public class AnnualPlanService {
     private final AnnualPlanRepository annualPlanRepository;
     private final CustomUserDetailsService customUserDetailsService;
 
-    public MemberResponseDto findMemberInfoByUsername(String username) {
-        return customUserDetailsService.findMemberInfoByUsername(username);
-    }
 
     public List<AnnualPlanResponseDto> findAllByStateOrState(Integer state1) {
         Integer state2 = 0;

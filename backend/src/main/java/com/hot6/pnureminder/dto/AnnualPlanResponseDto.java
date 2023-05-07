@@ -10,13 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AnnualPlanResponseDto {
 
-    private String date;
+    private String startDate;
+    private String endDate;
     private String context;
 
     public static AnnualPlanResponseDto toDto(AnnualPlan annualPlan){
 
         return new AnnualPlanResponseDto(
-                annualPlan.getDate(),
+                annualPlan.getStartDate(),
+                annualPlan.getEndDate(),
                 annualPlan.getContext()
         );
 

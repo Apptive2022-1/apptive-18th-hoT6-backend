@@ -1,5 +1,6 @@
 package com.hot6.pnureminder.controller;
 
+
 import com.hot6.pnureminder.dto.AnnualPlanResponseDto;
 import com.hot6.pnureminder.dto.MemberResponseDto;
 import com.hot6.pnureminder.jwt.JwtFilter;
@@ -17,23 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@RequestMapping("api/announce")
 @RequiredArgsConstructor
-@RequestMapping("api/annualplan")
-public class AnnualPlanController {
+@RestController
+public class AnnounceController {
     private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
-    private final MemberService memberService;
+
     private final AnnualPlanService annualPlanService;
+    private final MemberService memberService;
 
-    @GetMapping("/my")
-    public ResponseEntity<List<AnnualPlanResponseDto>> getAnnualPlanWithState(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        log.info("Authentication: {}", auth);
-        String username = auth.getName();
-
-        Integer userState = memberService.findMemberStateByUsername(username);
-
-        List<AnnualPlanResponseDto> annualPlans = annualPlanService.findAllByStateOrState(userState);
-        return ResponseEntity.ok().body(annualPlans);
-    }
 }

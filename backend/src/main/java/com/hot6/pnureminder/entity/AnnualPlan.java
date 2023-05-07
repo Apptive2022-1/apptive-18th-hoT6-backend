@@ -12,8 +12,11 @@ public class AnnualPlan {
     @Column
     private Long id;
 
-    @Column(name = "date")
-    private String date;
+    @Column(name = "startDate")
+    private String startDate;
+    @Column(name = "endDate")
+    private String endDate;
+
     @Column(name = "context")
     private String context;
 

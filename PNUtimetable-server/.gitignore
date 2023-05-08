@@ -1,4 +1,5 @@
 /env
 .idea
-amazon_rds/db_info.py
 *.pyc
+driver
+secret_info

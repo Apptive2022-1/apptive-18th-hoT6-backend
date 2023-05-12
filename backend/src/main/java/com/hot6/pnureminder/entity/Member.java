@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
-//local test용
 @Table(name = "remindersers")
 public class Member implements UserDetails {
     @Id

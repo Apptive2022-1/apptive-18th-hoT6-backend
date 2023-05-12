@@ -1,9 +1,7 @@
 package com.hot6.pnureminder.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -14,8 +12,11 @@ public class AnnualPlan {
     @Column
     private Long id;
 
-    @Column(name = "date")
-    private String date;
+    @Column(name = "start_date")
+    private String startDate;
+    @Column(name = "end_date")
+    private String endDate;
+
     @Column(name = "context")
     private String context;
 

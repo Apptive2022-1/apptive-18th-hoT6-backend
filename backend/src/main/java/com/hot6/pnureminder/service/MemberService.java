@@ -1,16 +1,12 @@
 package com.hot6.pnureminder.service;
 
 import com.hot6.pnureminder.dto.MemberResponseDto;
-import com.hot6.pnureminder.entity.Member;
-import com.hot6.pnureminder.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +15,8 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
 
     public Member findMemberByUsername(String username) {
         return memberRepository.findByUsername(username)
@@ -33,8 +28,15 @@ public class MemberService {
         return customUserDetailsService.findMemberInfoByUsername(username);
     }
 
+
     public Optional<MemberResponseDto> findUsernameForFindingId(String nickname, Integer findQuesNum, String findAnswer){
         Optional<Member> member = memberRepository.findByNicknameAndFindQuesNumAndFindAnswer(nickname,findQuesNum,findAnswer);
         return member.map(MemberResponseDto::toDtoUsername);
+
+    public Integer findMemberStateByUsername(String username) {
+        MemberResponseDto member = customUserDetailsService.findMemberInfoByUsername(username);
+
+        return member.getState();
+
     }
 }

@@ -42,6 +42,9 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private boolean enabled;
 
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private VerificationToken verificationToken;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",

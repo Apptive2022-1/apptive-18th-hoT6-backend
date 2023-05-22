@@ -33,6 +33,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+<<<<<<< Updated upstream
         // CSRF 설정 Disable
         http.csrf().disable()
             // exception handling 할 때 우리가 만든 클래스를 추가
@@ -42,6 +43,10 @@ public class SecurityConfig {
 
 
             .and()
+=======
+        http.cors().and().addFilter(corsFilter)
+            .csrf().disable()
+>>>>>>> Stashed changes
             .headers()
             .frameOptions()
             .disable()

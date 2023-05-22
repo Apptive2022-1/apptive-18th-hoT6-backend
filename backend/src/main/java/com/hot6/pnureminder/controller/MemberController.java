@@ -20,6 +20,8 @@ public class MemberController {
 //        return ResponseEntity.ok(memberService.findMemberInfoById(SecurityUtil.getCurrentMemberId()));
 //    }
 
+
+    //param으로 바꾸기
     @GetMapping("/{email}")
     public ResponseEntity<MemberResponseDto> getMemberInfoByUsername(@PathVariable String username) {
         return ResponseEntity.ok(memberService.findMemberInfoByUsername(username));

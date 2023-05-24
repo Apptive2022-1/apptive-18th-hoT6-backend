@@ -19,7 +19,7 @@ Jsprit (Based on TSP, VRP algorithm) + OpenStreet(Structure) in PNU(college camp
 ![image](https://github.com/Apptive2022-1/apptive-18th-hoT6-backend/assets/81455273/0016e624-13ed-4221-819e-913dc486bc30)
 
 ## DB Architecture (Serverless - lambda)
-![image](https://github.com/ApptiveDev/apptive-18th-hoT6-backend/assets/81455273/d6b5cee3-907b-4c42-82bc-333ea0adb62e)
+![image](https://github.com/ApptiveDev/apptive-18th-hoT6-backend/assets/81455273/3c3b734c-95b0-4ab2-8a39-a40ac048a308)
 
 
 

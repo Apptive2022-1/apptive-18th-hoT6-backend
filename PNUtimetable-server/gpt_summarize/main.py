@@ -1,16 +1,40 @@
 import openai
-from secret_info.my_openai_info import my_openai_token
+
+from bs4 import BeautifulSoup
+from my_openai_info import open_api_key
+
+# API 키 설정
+
+
+def get_each_html(driver, title, url):
+    driver.get(url)
+    driver.implicitly_wait(10)
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+    content = soup.find("div", {"class": "artclView"}).get_text(strip=True)
+
+    # 본문 내용을 여러 부분으로 나눕니다.
+    # parts = split_text(content, MAX_LENGTH)
+    #
+    # # 각 부분을 요약합니다.
+    # for part in parts:
+    #     summarized_part = summarize_text(title, part)
+    #     print(summarized_part)
+    try:
+        summarized_part = summarize_text(title, content)
+        return summarized_part
+    except:
+        return
 
 
 def summarize_text(title, text):
-    openai_token = my_openai_token()
-    openai.api_key = openai_token.token
+    openai.api_key = open_api_key.key
     # 요약할 텍스트 입력
     prompt = f"제목 : {title} 내용:{text}\n\n 이 게시글을 사용자가 검색으로 접근하거나 이 게시글이 필요한 사용자에게 이 글을 설명할 수 있는 키워드를 5개에서 8개 사이로 보여줘 출력 형식은 키워드 사이에 , 를 추가해서 설명없이 출력하게 해주세요."
 
     # 요청을 위한 파라미터 설정
     params = {
-        "engine": "text-davinci-002",
+        "engine": "text-davinci-003",
         "prompt": prompt,
         "max_tokens": 200,
         "n": 5,
@@ -23,5 +47,4 @@ def summarize_text(title, text):
 
     # 요약 결과 추출 및 반환
     summary = response.choices[0].text.strip()
-    print(summary)
     return summary

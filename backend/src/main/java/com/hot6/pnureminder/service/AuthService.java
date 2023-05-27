@@ -38,7 +38,7 @@ public class AuthService {
             );
 
         if (memberRepository.existsByUsername(memberRequestDto.getUsername())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new RuntimeException("already exist id");
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);

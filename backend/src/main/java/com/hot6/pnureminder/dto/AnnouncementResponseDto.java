@@ -14,14 +14,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnnouncementResponseDto {
-    private String department;
     private List<Content> content;
 
-    public static AnnouncementResponseDto toDto(String department, List<Announcement> announcements) {
+    public static AnnouncementResponseDto toDto(List<Announcement> announcements) {
         List<Content> contentList = announcements.stream()
                 .map(Content::new)
                 .collect(Collectors.toList());
-        return new AnnouncementResponseDto(department, contentList);
+        return new AnnouncementResponseDto(contentList);
     }
 
     @Getter

@@ -31,14 +31,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and()
-            .addFilter(corsFilter)
+        // CSRF 설정 Disable
+        http.cors().and().addFilter(corsFilter)
             .csrf().disable()
-            .headers()
-            .frameOptions()
-            .disable()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            // exception handling 할 때 우리가 만든 클래스를 추가
+            .exceptionHandling()
+            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .accessDeniedHandler(jwtAccessDeniedHandler)
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+            // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
             .and()
             .authorizeHttpRequests()
             .requestMatchers("/auth/**").permitAll()

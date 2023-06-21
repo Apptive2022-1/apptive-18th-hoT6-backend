@@ -8,8 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@Table(name = "favorite_department")
 public class FavoriteDepartment {
 
     @Id
@@ -18,12 +18,10 @@ public class FavoriteDepartment {
     private Long id;
 
     @Column(columnDefinition = "boolean default true")
-    private boolean alram;
+    private boolean isAlert;
 
-    @Column()
+    @Column
     private String keyword;
-
-    @Column()
 
     @ManyToOne
     private Member member;

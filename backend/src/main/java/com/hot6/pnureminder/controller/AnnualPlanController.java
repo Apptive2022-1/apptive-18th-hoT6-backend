@@ -1,7 +1,6 @@
 package com.hot6.pnureminder.controller;
 
 import com.hot6.pnureminder.dto.AnnualPlanResponseDto;
-import com.hot6.pnureminder.dto.MemberResponseDto;
 import com.hot6.pnureminder.jwt.JwtFilter;
 import com.hot6.pnureminder.service.AnnualPlanService;
 import com.hot6.pnureminder.service.MemberService;

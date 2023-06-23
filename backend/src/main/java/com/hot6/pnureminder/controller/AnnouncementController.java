@@ -4,27 +4,20 @@ package com.hot6.pnureminder.controller;
 import com.hot6.pnureminder.dto.AnnouncementResponseDto;
 import com.hot6.pnureminder.dto.Favorite.FavoriteDepartmentAnnouncementDto;
 import com.hot6.pnureminder.entity.Announcement;
-import com.hot6.pnureminder.entity.Favorites.FavoriteDepartment;
 import com.hot6.pnureminder.entity.Member;
-import com.hot6.pnureminder.repository.CustomMajorAnnouncementRepository;
-import com.hot6.pnureminder.repository.Favorites.FavoriteDepartmentRepository;
 import com.hot6.pnureminder.service.AnnouncementService;
-import com.hot6.pnureminder.service.AuthService;
+import com.hot6.pnureminder.service.DepartmentService;
 import com.hot6.pnureminder.service.Favorite.FavoriteDepartmentService;
 
 import com.hot6.pnureminder.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping("api/announce")
 @RequiredArgsConstructor
@@ -34,12 +27,26 @@ public class AnnouncementController {
     private final AnnouncementService announcementService;
     private final FavoriteDepartmentService favoriteDepartmentService;
     private final MemberService memberService;
+    private final DepartmentService departmentService;
 
-    @GetMapping("/{department}")
-    public AnnouncementResponseDto getAnnouncementByDepartment(@PathVariable String department) {
-        List<Announcement> announcements = announcementService.getAnnouncementsByDepartment(department);
+    @GetMapping("/{departmentName}")
+    public AnnouncementResponseDto getAnnouncementByDepartment(@PathVariable String departmentName, @RequestParam(required = false) String keyword) {
+        List<Announcement> announcements = announcementService.getAnnouncementsByDepartmentNameAndKeyword(departmentName, keyword);
         return AnnouncementResponseDto.toDto(announcements);
     }
+
+    @PostMapping("/{departmentName}/like")
+    public ResponseEntity<?> addFavorite(@PathVariable String departmentName) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        Member member = memberService.findMemberByUsername(username);
+
+        favoriteDepartmentService.toggleFavorite(member, departmentName);
+
+        return ResponseEntity.ok("Added or deleted Favorites sucessfully");
+    }
+
 
     @GetMapping("/my")
     public ResponseEntity<List<FavoriteDepartmentAnnouncementDto>> getFavorites() {

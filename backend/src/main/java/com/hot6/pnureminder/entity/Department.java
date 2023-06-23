@@ -24,10 +24,8 @@ public class Department {
     private String name;
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FavoriteDepartment> favoriteDepartments = new ArrayList<>();
+    private List<FavoriteDepartment> favoriteBuildings = new ArrayList<>();
 
-
-    // other fields and methods...
 }
 
 

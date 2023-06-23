@@ -11,6 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FavoriteDepartmentAnnouncementDto {
-    private FavoriteDepartment favoriteDepartment;
+    private String departmentName;
+    private boolean isAlert;
+    private String keyword;
     private List<Announcement> announcements;
 }

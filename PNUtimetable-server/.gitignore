@@ -1,0 +1,6 @@
+/env
+.idea
+aws/db_info.py
+*.pyc
+gpt_summarize/my_openai_info.py
+Announcement/url_lists

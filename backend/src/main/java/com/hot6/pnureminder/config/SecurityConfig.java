@@ -5,7 +5,6 @@ import com.hot6.pnureminder.jwt.JwtAuthenticationEntryPoint;
 import com.hot6.pnureminder.jwt.JwtSecurityConfig;
 import com.hot6.pnureminder.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
 
@@ -34,21 +32,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CSRF 설정 Disable
-        http.csrf().disable()
+        http.cors().and().addFilter(corsFilter)
+            .csrf().disable()
             // exception handling 할 때 우리가 만든 클래스를 추가
             .exceptionHandling()
             .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .accessDeniedHandler(jwtAccessDeniedHandler)
-
-
             .and()
-            .headers()
-            .frameOptions()
-            .disable()
-                .and()
-                .cors().disable()
-            // 시큐리티는 기본적으로 세션을 사용
-            // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
@@ -57,7 +47,6 @@ public class SecurityConfig {
             .authorizeHttpRequests()
             .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/api/**").permitAll()
-            .anyRequest().authenticated()
 
             .and()
             .apply(new JwtSecurityConfig(tokenProvider));

@@ -1,14 +1,14 @@
 package com.hot6.pnureminder.entity;
 
+import com.hot6.pnureminder.entity.Favorites.FavoriteBuilding;
+import com.hot6.pnureminder.entity.Favorites.FavoriteDepartment;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity

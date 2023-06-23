@@ -1,5 +1,7 @@
 package com.hot6.pnureminder.entity;
 
+import com.hot6.pnureminder.entity.Favorites.FavoriteBuilding;
+import com.hot6.pnureminder.entity.Favorites.FavoriteDepartment;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -26,6 +28,8 @@ public class Building {
     @Column(name = "building_lng")
     private Double buildingLng;
 
+    @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteBuilding> favoriteBuildings = new ArrayList<>();
 
 
     @Transient

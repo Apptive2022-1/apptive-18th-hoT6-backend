@@ -1,25 +1,28 @@
 package com.hot6.pnureminder.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.annotation.Id;
 
-@Entity
+
 @Data
-@Table(name="announcement")
+@NoArgsConstructor
+//컬렉션 이름 고정하지 않기
+@Document
 public class Announcement {
 
     @Id
-    @GeneratedValue
-    @Column
-    private Long id;
+    private String id;
 
-    @Column(name = "subject")
-    private String subject;
+    @Field(name = "title")
+    private String title;
 
-    @Column(name = "urls")
+    @Field(name = "urls")
     private String urls;
 
-    @Column(name = "date")
+    @Field(name = "date")
     private String date;
 }

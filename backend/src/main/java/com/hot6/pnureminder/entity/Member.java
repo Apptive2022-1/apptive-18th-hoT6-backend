@@ -1,14 +1,14 @@
 package com.hot6.pnureminder.entity;
 
+import com.hot6.pnureminder.entity.Favorites.FavoriteBuilding;
+import com.hot6.pnureminder.entity.Favorites.FavoriteDepartment;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -39,6 +39,16 @@ public class Member implements UserDetails {
 
     @Column(nullable = false)
     private boolean enabled;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private VerificationToken verificationToken;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteDepartment> favoriteDepartments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteBuilding> favoriteBuildings = new ArrayList<>();
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

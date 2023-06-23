@@ -22,4 +22,12 @@ public class MemberResponseDto {
                 member.getState()
         );
     }
+
+    public static MemberResponseDto toDtoUsername(Member member) {
+
+        return new MemberResponseDto(
+                member.getUsername(),
+                member.getState()
+        );
+    }
 }

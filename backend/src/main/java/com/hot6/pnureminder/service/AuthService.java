@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,8 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    private final SmtpEmailService smtpEmailService;
+
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
             Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
@@ -35,7 +38,7 @@ public class AuthService {
             );
 
         if (memberRepository.existsByUsername(memberRequestDto.getUsername())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new RuntimeException("already exist id");
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
@@ -98,4 +101,21 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
+
+    @Transactional
+    public void issueTempPassword(String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을수 없습니다"));
+
+        String tempPassword = generateTempPassword();
+        member.setPassword(passwordEncoder.encode(tempPassword));
+        memberRepository.save(member);
+
+        smtpEmailService.sendTempPassword(member.getUsername(),tempPassword);
+    }
+    private String generateTempPassword() {
+        return UUID.randomUUID().toString().substring(0, 8);
+
+    }
+
 }

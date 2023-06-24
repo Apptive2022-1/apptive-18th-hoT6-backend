@@ -2,6 +2,7 @@ package com.hot6.pnureminder.entity;
 
 import com.hot6.pnureminder.entity.Favorites.FavoriteBuilding;
 import com.hot6.pnureminder.entity.Favorites.FavoriteDepartment;
+import com.hot6.pnureminder.entity.Event;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

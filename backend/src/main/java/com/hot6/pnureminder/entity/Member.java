@@ -1,14 +1,15 @@
 package com.hot6.pnureminder.entity;
 
+import com.hot6.pnureminder.entity.Favorites.FavoriteBuilding;
+import com.hot6.pnureminder.entity.Favorites.FavoriteDepartment;
+import com.hot6.pnureminder.entity.Event;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -30,18 +31,30 @@ public class Member implements UserDetails {
 
     @Column(nullable = false)
     private Integer state;
+
     @Column(name = "nickname")
     private String nickname;
+
     @Column(name = "findQuestion")
     private Integer findQuesNum;
+
     @Column(name = "findAnswer")
     private String findAnswer;
 
     @Column(nullable = false)
     private boolean enabled;
+//현재는 메일 전송 방식으로 임시 비밀번호를 발급해주고 있음
+//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+//    private VerificationToken verificationToken;
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
-    private VerificationToken verificationToken;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteDepartment> favoriteDepartments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteBuilding> favoriteBuildings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Event> events;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

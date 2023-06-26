@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+
+//사용하지 않는 방식
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Table(name = "verificationToken")
 public class VerificationToken {
 

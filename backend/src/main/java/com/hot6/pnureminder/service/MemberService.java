@@ -4,7 +4,6 @@ import com.hot6.pnureminder.dto.MemberResponseDto;
 import com.hot6.pnureminder.entity.Member;
 import com.hot6.pnureminder.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +30,7 @@ public class MemberService {
     public MemberResponseDto findMemberInfoByUsername(String username) {
         return customUserDetailsService.findMemberInfoByUsername(username);
     }
+
 
 
     public Optional<MemberResponseDto> findUsernameForFindingId(String nickname, Integer findQuesNum, String findAnswer) {

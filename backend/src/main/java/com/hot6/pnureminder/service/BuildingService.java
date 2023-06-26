@@ -6,9 +6,9 @@ import com.hot6.pnureminder.dto.LectureRoomDto;
 import com.hot6.pnureminder.entity.Building;
 import com.hot6.pnureminder.entity.Lecture;
 import com.hot6.pnureminder.entity.LectureRoom;
+import com.hot6.pnureminder.exception.ResourceNotFoundException;
 import com.hot6.pnureminder.repository.BuildingRepository;
 import com.hot6.pnureminder.util.DateTimeUtilsForTest;
-import com.hot6.pnureminder.util.haversineDistance;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,6 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +29,10 @@ public class BuildingService {
     private final LectureRoomService lectureRoomService;
     private final LectureService lectureService;
 
+    public Building findByBuildingName(String buildingName){
+        return buildingRepository.findByBuildingName(buildingName)
+                .orElseThrow(() -> new ResourceNotFoundException("Building not found with name " + buildingName));
+    }
 
     public List<Building> findNearestBuildings(double latitude, double longitude) {
         List<Object[]> results = buildingRepository.findNearestBuildingsWithDistance(latitude, longitude);
@@ -144,10 +147,16 @@ public class BuildingService {
                 availableLectureRooms.add(updatedLectureRoomDto);
             });
 
-            }
-
+        }
 
         return availableLectureRooms;
+
+    }
+
+        public List<LectureRoomDto> findRoomsByBuildingNameAndSetTimeNow(String buildingName) {
+            Building building = this.findByBuildingName(buildingName);
+            ZonedDateTime currentTime = DateTimeUtilsForTest.getCurrentSeoulTime();
+            return findAvailableLectureRoomsWithSetTime(building,30, currentTime); // setMinutes를 고정값 30으로 설정
 
     }
 

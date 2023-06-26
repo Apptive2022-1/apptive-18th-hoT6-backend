@@ -37,7 +37,7 @@ public class EventDto {
                 .build();
     }
 
-
+    //회원 id는 숨김(보안상 문제)
     public static EventDto fromEntity(Event event) {
         return EventDto.builder()
                 .eventId(event.getEventId())

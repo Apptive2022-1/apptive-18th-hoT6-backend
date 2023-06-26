@@ -31,18 +31,21 @@ public class Member implements UserDetails {
 
     @Column(nullable = false)
     private Integer state;
+
     @Column(name = "nickname")
     private String nickname;
+
     @Column(name = "findQuestion")
     private Integer findQuesNum;
+
     @Column(name = "findAnswer")
     private String findAnswer;
 
     @Column(nullable = false)
     private boolean enabled;
-
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
-    private VerificationToken verificationToken;
+//현재는 메일 전송 방식으로 임시 비밀번호를 발급해주고 있음
+//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+//    private VerificationToken verificationToken;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteDepartment> favoriteDepartments = new ArrayList<>();

@@ -19,7 +19,8 @@ public class Event {
     @Column
     private Long eventId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Column(nullable = false)

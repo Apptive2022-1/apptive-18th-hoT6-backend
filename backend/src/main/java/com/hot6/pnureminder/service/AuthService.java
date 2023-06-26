@@ -73,6 +73,16 @@ public class AuthService {
     }
 
     @Transactional
+    public void logout(TokenRequestDto tokenRequestDto) {
+        // 로그아웃하려는 사용자의 정보를 가져옴
+        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+
+        // 저장소에서 해당 사용자의 refresh token 삭제
+        refreshTokenRepository.deleteByKey(authentication.getName());
+    }
+
+
+    @Transactional
     public TokenDto reissue(TokenRequestDto tokenRequestDto) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
@@ -113,6 +123,7 @@ public class AuthService {
 
         smtpEmailService.sendTempPassword(member.getUsername(),tempPassword);
     }
+
     private String generateTempPassword() {
         return UUID.randomUUID().toString().substring(0, 8);
 

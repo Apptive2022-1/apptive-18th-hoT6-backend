@@ -12,8 +12,7 @@ public class DateTimeUtils {
 
     public static ZonedDateTime getCurrentSeoulTime() {
         ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZonedDateTime seoulZonedDateTime = localDateTime.atZone(seoulZoneId);
+        ZonedDateTime seoulZonedDateTime = ZonedDateTime.now(seoulZoneId);
         return seoulZonedDateTime;
     }
 

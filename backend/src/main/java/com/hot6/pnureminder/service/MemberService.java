@@ -32,6 +32,7 @@ public class MemberService {
     }
 
 
+
     public Optional<MemberResponseDto> findUsernameForFindingId(String nickname, Integer findQuesNum, String findAnswer) {
         Optional<Member> member = memberRepository.findByNicknameAndFindQuesNumAndFindAnswer(nickname, findQuesNum, findAnswer);
         return member.map(MemberResponseDto::toDtoUsername);

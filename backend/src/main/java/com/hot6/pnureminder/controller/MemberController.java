@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -21,9 +22,9 @@ public class MemberController {
 //    }
 
 
-    //param으로 바꾸기
-    @GetMapping("/{email}")
-    public ResponseEntity<MemberResponseDto> getMemberInfoByUsername(@PathVariable String username) {
+    @GetMapping("/my")
+    public ResponseEntity<MemberResponseDto> getMemberInfoByUsername(Principal principal) {
+        String username = principal.getName();
         return ResponseEntity.ok(memberService.findMemberInfoByUsername(username));
     }
 

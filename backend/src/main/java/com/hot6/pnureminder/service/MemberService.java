@@ -33,10 +33,12 @@ public class MemberService {
 
 
 
-    public Optional<MemberResponseDto> findUsernameForFindingId(String nickname, Integer findQuesNum, String findAnswer) {
+    public String findUsernameForFindingId(String nickname, Integer findQuesNum, String findAnswer) {
         Optional<Member> member = memberRepository.findByNicknameAndFindQuesNumAndFindAnswer(nickname, findQuesNum, findAnswer);
-        return member.map(MemberResponseDto::toDtoUsername);
+        return member.map(Member::getUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with given parameters"));
     }
+
 
     public Integer findMemberStateByUsername(String username) {
         MemberResponseDto member = customUserDetailsService.findMemberInfoByUsername(username);

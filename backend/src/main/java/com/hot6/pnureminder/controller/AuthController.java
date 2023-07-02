@@ -43,43 +43,21 @@ public class AuthController {
         return ResponseEntity.ok(authService.reissue(tokenRequestDto));
     }
 
-    @GetMapping("/findingId")
-    public ResponseEntity<MemberResponseDto> getMemberIdForFindingId(
-            @RequestParam("nickname") String nickname,
-            @RequestParam("findQuesNum") Integer findQuesNum,
-            @RequestParam("findAnswer") String findAnswer) {
-
-        Optional<MemberResponseDto> memberResponseDto = memberService.findUsernameForFindingId(nickname, findQuesNum, findAnswer);
-
-        if (memberResponseDto.isPresent()) {
-            return new ResponseEntity<>(memberResponseDto.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @PostMapping("/findingId")
+    public String getMemberIdForFindingId(@RequestBody FindingIdRequestDto requestDto) {
+        String username = memberService.findUsernameForFindingId(requestDto.getNickname(), requestDto.getFindQuesNum(), requestDto.getFindAnswer());
+        return username;
     }
 
 
+    // 보안문제 리팩터링 요청
     @PostMapping("/send-email")
     public ResponseEntity<?> getNewPasswordToUser(
             @RequestParam("username") String username){
-//토큰 발급 방식
-//        verificationTokenService.createVerificationToken(username);
-//임시 비밀번호 방식
         authService.issueTempPassword(username);
         return new ResponseEntity<>("Verification token has been sent to your email.", HttpStatus.OK);
     }
 
-    @GetMapping("/findingPw")
-    public ResponseEntity<MemberResponseDto> getNewPasswordToUser(
-            @RequestParam("username") String username,
-            @RequestParam("verificationToken") String verificationToken) {
 
-//메일을 통해 확인한 코드를 가지고 있는 Member entity 출력
-        Member tokenMember = verificationTokenService.verifyEmail(verificationToken);
-//받아온 username을 통해 db에서 찾은 Member entity 출력
-        Member usernameMember = memberService.findMemberByUsername(username);
-
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    // 토큰발급방식 deprecated 됨
 }

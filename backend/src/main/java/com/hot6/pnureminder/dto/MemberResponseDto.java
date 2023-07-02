@@ -13,21 +13,19 @@ public class MemberResponseDto {
 
     private Integer state;
 
+    private String nickname;
+
+
+
 
 // 코드의 재사용성과 가독성을 위한 Member 객체를 Dto 객체로 변환하는 일종의 캡슐화 전략
     public static MemberResponseDto toDto(Member member) {
 
         return new MemberResponseDto(
                 member.getUsername(),
-                member.getState()
+                member.getState(),
+                member.getNickname()
         );
     }
 
-    public static MemberResponseDto toDtoUsername(Member member) {
-
-        return new MemberResponseDto(
-                member.getUsername(),
-                member.getState()
-        );
-    }
 }

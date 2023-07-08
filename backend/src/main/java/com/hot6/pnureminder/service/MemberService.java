@@ -1,5 +1,6 @@
 package com.hot6.pnureminder.service;
 
+import com.hot6.pnureminder.dto.MemberFindIdReqDto;
 import com.hot6.pnureminder.dto.MemberResponseDto;
 import com.hot6.pnureminder.entity.Member;
 import com.hot6.pnureminder.repository.MemberRepository;
@@ -45,5 +46,9 @@ public class MemberService {
 
         return member.getState();
 
+    }
+
+    public boolean checkNickname(String nickname) {
+        return memberRepository.findByNickname(nickname).isEmpty();
     }
 }

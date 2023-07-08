@@ -26,6 +26,12 @@ public class AuthController {
         return ResponseEntity.ok(authService.signup(memberRequestDto));
     }
 
+    //보안 향상을 위한 중복닉네임 미허가
+    @GetMapping("/checknickname")
+    public boolean checkNickname(@RequestParam String nickname) {
+        return memberService.checkNickname(nickname);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) {
         return ResponseEntity.ok(authService.login(loginDto));
@@ -45,8 +51,7 @@ public class AuthController {
 
     @PostMapping("/findingId")
     public String getMemberIdForFindingId(@RequestBody FindingIdRequestDto requestDto) {
-        String username = memberService.findUsernameForFindingId(requestDto.getNickname(), requestDto.getFindQuesNum(), requestDto.getFindAnswer());
-        return username;
+        return  memberService.findUsernameForFindingId(requestDto.getNickname(), requestDto.getFindQuesNum(), requestDto.getFindAnswer());
     }
 
 
@@ -54,9 +59,10 @@ public class AuthController {
     @PostMapping("/send-email")
     public ResponseEntity<?> getNewPasswordToUser(
             @RequestParam("username") String username){
-        authService.issueTempPassword(username);
-        return new ResponseEntity<>("Verification token has been sent to your email.", HttpStatus.OK);
-    }
+            authService.issueTempPassword(username);
+            return new ResponseEntity<>("Verification token has been sent to your email.", HttpStatus.OK);
+        }
+
 
 
     // 토큰발급방식 deprecated 됨

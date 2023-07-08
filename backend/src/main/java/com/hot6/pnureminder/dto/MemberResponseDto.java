@@ -4,8 +4,10 @@ import com.hot6.pnureminder.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberResponseDto {

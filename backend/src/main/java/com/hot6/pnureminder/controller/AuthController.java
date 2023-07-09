@@ -1,7 +1,8 @@
 package com.hot6.pnureminder.controller;
 
-import com.hot6.pnureminder.dto.*;
-import com.hot6.pnureminder.entity.Member;
+import com.hot6.pnureminder.dto.Member.*;
+import com.hot6.pnureminder.dto.Token.TokenReqDto;
+import com.hot6.pnureminder.dto.Token.TokenResDto;
 import com.hot6.pnureminder.service.AuthService;
 import com.hot6.pnureminder.service.MemberService;
 import com.hot6.pnureminder.service.VerificationTokenService;
@@ -9,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -33,33 +32,32 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<TokenResDto> login(@RequestBody LoginDto loginDto) {
         return ResponseEntity.ok(authService.login(loginDto));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody TokenRequestDto requestDto) {
+    public ResponseEntity<?> logout(@RequestBody TokenReqDto requestDto) {
         authService.logout(requestDto);
         return ResponseEntity.ok().build();
     }
 
 
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-        return ResponseEntity.ok(authService.reissue(tokenRequestDto));
+    public ResponseEntity<TokenResDto> reissue(@RequestBody TokenReqDto tokenReqDto) {
+        return ResponseEntity.ok(authService.reissue(tokenReqDto));
     }
 
     @PostMapping("/findingId")
-    public String getMemberIdForFindingId(@RequestBody FindingIdRequestDto requestDto) {
+    public String getMemberIdForFindingId(@RequestBody MemberFindIdReqDto requestDto) {
         return  memberService.findUsernameForFindingId(requestDto.getNickname(), requestDto.getFindQuesNum(), requestDto.getFindAnswer());
     }
 
 
     // 보안문제 리팩터링 요청
     @PostMapping("/send-email")
-    public ResponseEntity<?> getNewPasswordToUser(
-            @RequestParam("username") String username){
-            authService.issueTempPassword(username);
+    public ResponseEntity<?> getNewPasswordToUser(@RequestBody MemberFindPwReqDto reqDto){
+            authService.issueTempPassword(reqDto.getUsername(), reqDto.getNickname());
             return new ResponseEntity<>("Verification token has been sent to your email.", HttpStatus.OK);
         }
 

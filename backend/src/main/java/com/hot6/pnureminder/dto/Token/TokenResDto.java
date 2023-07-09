@@ -1,4 +1,4 @@
-package com.hot6.pnureminder.dto;
+package com.hot6.pnureminder.dto.Token;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TokenDto {
+public class TokenResDto {
 
     private String grantType;
     private String accessToken;

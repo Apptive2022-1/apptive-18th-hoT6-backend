@@ -1,4 +1,4 @@
-package com.hot6.pnureminder.dto;
+package com.hot6.pnureminder.dto.Member;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

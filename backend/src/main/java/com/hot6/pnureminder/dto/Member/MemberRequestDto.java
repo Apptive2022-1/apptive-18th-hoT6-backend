@@ -1,4 +1,4 @@
-package com.hot6.pnureminder.dto;
+package com.hot6.pnureminder.dto.Member;
 
 import com.hot6.pnureminder.entity.Member;
 import lombok.AllArgsConstructor;

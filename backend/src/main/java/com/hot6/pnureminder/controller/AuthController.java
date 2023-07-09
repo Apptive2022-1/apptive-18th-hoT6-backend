@@ -1,7 +1,8 @@
 package com.hot6.pnureminder.controller;
 
-import com.hot6.pnureminder.dto.*;
-import com.hot6.pnureminder.entity.Member;
+import com.hot6.pnureminder.dto.Member.*;
+import com.hot6.pnureminder.dto.Token.TokenReqDto;
+import com.hot6.pnureminder.dto.Token.TokenResDto;
 import com.hot6.pnureminder.service.AuthService;
 import com.hot6.pnureminder.service.MemberService;
 import com.hot6.pnureminder.service.VerificationTokenService;
@@ -9,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -26,60 +25,43 @@ public class AuthController {
         return ResponseEntity.ok(authService.signup(memberRequestDto));
     }
 
+    //보안 향상을 위한 중복닉네임 미허가
+    @GetMapping("/checknickname")
+    public boolean checkNickname(@RequestParam String nickname) {
+        return memberService.checkNickname(nickname);
+    }
+
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<TokenResDto> login(@RequestBody LoginDto loginDto) {
         return ResponseEntity.ok(authService.login(loginDto));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody TokenRequestDto requestDto) {
+    public ResponseEntity<?> logout(@RequestBody TokenReqDto requestDto) {
         authService.logout(requestDto);
         return ResponseEntity.ok().build();
     }
 
 
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-        return ResponseEntity.ok(authService.reissue(tokenRequestDto));
+    public ResponseEntity<TokenResDto> reissue(@RequestBody TokenReqDto tokenReqDto) {
+        return ResponseEntity.ok(authService.reissue(tokenReqDto));
     }
 
-    @GetMapping("/findingId")
-    public ResponseEntity<MemberResponseDto> getMemberIdForFindingId(
-            @RequestParam("nickname") String nickname,
-            @RequestParam("findQuesNum") Integer findQuesNum,
-            @RequestParam("findAnswer") String findAnswer) {
-
-        Optional<MemberResponseDto> memberResponseDto = memberService.findUsernameForFindingId(nickname, findQuesNum, findAnswer);
-
-        if (memberResponseDto.isPresent()) {
-            return new ResponseEntity<>(memberResponseDto.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @PostMapping("/findingId")
+    public String getMemberIdForFindingId(@RequestBody MemberFindIdReqDto requestDto) {
+        return  memberService.findUsernameForFindingId(requestDto.getNickname(), requestDto.getFindQuesNum(), requestDto.getFindAnswer());
     }
 
 
+    // 보안문제 리팩터링 요청
     @PostMapping("/send-email")
-    public ResponseEntity<?> getNewPasswordToUser(
-            @RequestParam("username") String username){
-//토큰 발급 방식
-//        verificationTokenService.createVerificationToken(username);
-//임시 비밀번호 방식
-        authService.issueTempPassword(username);
-        return new ResponseEntity<>("Verification token has been sent to your email.", HttpStatus.OK);
-    }
-
-    @GetMapping("/findingPw")
-    public ResponseEntity<MemberResponseDto> getNewPasswordToUser(
-            @RequestParam("username") String username,
-            @RequestParam("verificationToken") String verificationToken) {
-
-//메일을 통해 확인한 코드를 가지고 있는 Member entity 출력
-        Member tokenMember = verificationTokenService.verifyEmail(verificationToken);
-//받아온 username을 통해 db에서 찾은 Member entity 출력
-        Member usernameMember = memberService.findMemberByUsername(username);
+    public ResponseEntity<?> getNewPasswordToUser(@RequestBody MemberFindPwReqDto reqDto){
+            authService.issueTempPassword(reqDto.getUsername(), reqDto.getNickname());
+            return new ResponseEntity<>("Verification token has been sent to your email.", HttpStatus.OK);
+        }
 
 
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+
+    // 토큰발급방식 deprecated 됨
 }

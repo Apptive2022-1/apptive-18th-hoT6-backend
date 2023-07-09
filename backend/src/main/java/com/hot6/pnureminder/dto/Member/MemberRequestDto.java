@@ -1,4 +1,4 @@
-package com.hot6.pnureminder.dto;
+package com.hot6.pnureminder.dto.Member;
 
 import com.hot6.pnureminder.entity.Member;
 import lombok.AllArgsConstructor;
@@ -19,6 +19,9 @@ public class MemberRequestDto {
     private Integer findQuesNum;
     private String findAnswer;
 
+
+    //변환 메서드는 역시 따로 매퍼 클래스를 만들어서 구현하는것이 좋은지
+    //DTO에는 오직 로직을 넣지않고 데이터전송에만 사용해야할지
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
             .username(username)

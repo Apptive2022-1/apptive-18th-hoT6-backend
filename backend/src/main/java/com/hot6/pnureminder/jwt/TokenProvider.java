@@ -1,6 +1,6 @@
 package com.hot6.pnureminder.jwt;
 
-import com.hot6.pnureminder.dto.TokenDto;
+import com.hot6.pnureminder.dto.Token.TokenResDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -36,7 +36,7 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenDto generateTokenDto(Authentication authentication) {
+    public TokenResDto generateTokenDto(Authentication authentication) {
         // 권한들 가져오기
         String authorities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
@@ -65,7 +65,7 @@ public class TokenProvider {
         log.info("Generated Token: {}", accessToken);
         log.info("Expires at: {}", accessTokenExpiresIn);
 
-        return TokenDto.builder()
+        return TokenResDto.builder()
             .grantType(BEARER_TYPE)
             .accessToken(accessToken)
             .accessTokenExpiresIn(accessTokenExpiresIn.getTime())

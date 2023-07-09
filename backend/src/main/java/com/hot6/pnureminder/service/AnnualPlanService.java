@@ -1,7 +1,6 @@
 package com.hot6.pnureminder.service;
 
 import com.hot6.pnureminder.dto.AnnualPlanResponseDto;
-import com.hot6.pnureminder.dto.MemberResponseDto;
 import com.hot6.pnureminder.entity.AnnualPlan;
 import com.hot6.pnureminder.repository.AnnualPlanRepository;
 import lombok.RequiredArgsConstructor;

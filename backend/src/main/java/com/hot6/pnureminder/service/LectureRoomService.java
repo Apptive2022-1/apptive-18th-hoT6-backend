@@ -36,7 +36,22 @@ public class LectureRoomService {
                 requestDto.getBuildingName(),
                 requestDto.getDayOfWeek(),
                 endOfOngoingLecture,
-                startOfNextLecture
+                startOfNextLecture,
+                currentTime
+        );
+    }
+
+    public List<Object[]> getAvailableLectureRoomsAndLectures(LectureRoomRequestDto requestDto) {
+        LocalTime currentTime = requestDto.getCurrentTime();
+        LocalTime endOfOngoingLecture = currentTime.plusMinutes(requestDto.getSetTime());
+        LocalTime startOfNextLecture = currentTime.plusMinutes(requestDto.getSetTime());
+
+        return lectureRoomRepository.findAvailableLectureRoomsAndLectures(
+                requestDto.getBuildingName(),
+                requestDto.getDayOfWeek(),
+                endOfOngoingLecture,
+                startOfNextLecture,
+                currentTime
         );
     }
 

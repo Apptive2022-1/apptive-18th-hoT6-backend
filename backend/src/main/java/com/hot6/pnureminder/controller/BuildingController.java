@@ -2,12 +2,9 @@ package com.hot6.pnureminder.controller;
 
 import com.hot6.pnureminder.dto.BuildingResponseDto;
 import com.hot6.pnureminder.dto.Favorite.FavoriteBuildingRoomListDto;
-import com.hot6.pnureminder.dto.Favorite.FavoriteDepartmentAnnouncementDto;
 import com.hot6.pnureminder.dto.LectureRoomDto;
 import com.hot6.pnureminder.entity.Building;
-import com.hot6.pnureminder.entity.Favorites.FavoriteBuilding;
 import com.hot6.pnureminder.entity.Member;
-import com.hot6.pnureminder.exception.ResourceNotFoundException;
 import com.hot6.pnureminder.service.BuildingService;
 import com.hot6.pnureminder.service.Favorite.FavoriteBuildingService;
 import com.hot6.pnureminder.service.MemberService;

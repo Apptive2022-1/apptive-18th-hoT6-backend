@@ -29,7 +29,14 @@ spring:
           auth: true
           starttls:
             enable: true
-
+  data:
+    mongodb:
+      host: 52.79.200.150
+      port: 27017
+      authenticationDatabase: admin
+      username: chos
+      password: tokyo0125
+      database: major_announcement
 logging:
   level:
     root: INFO
@@ -39,3 +46,4 @@ jwt:
 
 server:
   port: 8080
+

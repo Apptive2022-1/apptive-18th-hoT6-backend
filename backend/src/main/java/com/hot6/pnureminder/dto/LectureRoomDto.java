@@ -16,19 +16,6 @@ public class LectureRoomDto {
     private LectureInfoDto earliestLectureInfoDto;
 
 
-    public static LectureRoomDto toDto(LectureRoom lectureRoom){
-
-        List<LectureDto> lectureDtos = lectureRoom.getLectures().stream()
-                .map(LectureDto::toDto)
-                .collect(Collectors.toList());
-
-        return new LectureRoomDto(
-                lectureRoom.getId(),
-                lectureRoom.getRoomNum(),
-                lectureDtos,
-                null
-        );
-    }
 
     public static LectureRoomDto toDto(LectureRoom lectureRoom, LectureInfoDto earliestLectureInfoDto) {
         return new LectureRoomDto(

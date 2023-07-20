@@ -11,7 +11,6 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "lecture_room")
-@ToString(exclude = {"lectures","building"})
 public class LectureRoom {
 
     @Id
@@ -24,10 +23,6 @@ public class LectureRoom {
 
     @Column(name = "building_num")
     private Integer buildingNum;
-
-    @OneToMany(mappedBy = "lectureRoom")
-    @JsonManagedReference
-    private List<Lecture> lectures;
 
     @ManyToOne
     @JoinColumn(name = "building_num", insertable = false, updatable = false)

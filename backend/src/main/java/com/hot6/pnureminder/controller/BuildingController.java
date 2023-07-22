@@ -45,18 +45,57 @@ public class BuildingController {
     public List<LectureRoomDto> getRoomByBuildingName(@PathVariable String buildingName, @RequestParam(required = false) int setMinutes) {
         return buildingService.findRoomsByBuildingNameAndSetTimeNow(buildingName);
     }
+// 토글 방식
+//    @PostMapping("/{buildingName}/like")
+//    public ResponseEntity<?> addFavorite(@PathVariable String buildingName) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String username = auth.getName();
+//
+//        Member member = memberService.findMemberByUsername(username);
+//
+//
+//        boolean isAdded = favoriteBuildingService.toggleFavorite(member, buildingName);
+//
+//        String message = isAdded ? buildingName+"이(가) 즐겨찾기에 추가되었습니다." : buildingName+"이(가) 즐겨찾기에서 해제되었습니다.";
+//
+//        return ResponseEntity.ok(message);
+//    }
 
     @PostMapping("/{buildingName}/like")
     public ResponseEntity<?> addFavorite(@PathVariable String buildingName) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-
         Member member = memberService.findMemberByUsername(username);
 
-        favoriteBuildingService.toggleFavorite(member, buildingName);
+        boolean isAdded = favoriteBuildingService.addFavorite(member, buildingName);
 
-        return ResponseEntity.ok("Added or deleted Favorites sucessfully");
+        if (isAdded) {
+            String message = buildingName + "이(가) 즐겨찾기에 추가되었습니다.";
+            return ResponseEntity.ok(message);
+        } else {
+            return ResponseEntity.badRequest().body(buildingName + "이(가) 이미 즐겨찾기에 있습니다.");
+        }
     }
+
+    @PostMapping("/{buildingName}/unlike")
+    public ResponseEntity<?> removeFavorite(@PathVariable String buildingName) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Member member = memberService.findMemberByUsername(username);
+
+        boolean isRemoved = favoriteBuildingService.removeFavorite(member, buildingName);
+
+        if (isRemoved) {
+            String message = buildingName + "이(가) 즐겨찾기에서 해제되었습니다.";
+            return ResponseEntity.ok(message);
+        } else {
+            return ResponseEntity.badRequest().body(buildingName + "이(가) 즐겨찾기에 없습니다.");
+        }
+    }
+
+
+
+
 
     @GetMapping("/my")
     public ResponseEntity<List<FavoriteBuildingRoomListDto>> getFavoriteBuildings() {

@@ -52,7 +52,7 @@ public class FavoriteDepartmentService {
         return favoriteDepartmentAnnouncementDtos;
     }
 
-    public void toggleFavorite(Member member, String departmentName) {
+    public boolean toggleFavorite(Member member, String departmentName) {
         Department department = departmentService.getDepartmentByName(departmentName)
                 .orElseThrow(() -> new EntityNotFoundException("Department not found"));
 
@@ -61,12 +61,44 @@ public class FavoriteDepartmentService {
         if (favoriteDepartmentOptional.isPresent()) {
             // 이미 즐겨찾기에 추가되어 있다면 삭제
             favoriteDepartmentRepository.delete(favoriteDepartmentOptional.get());
+            return false;
         } else {
             // 즐겨찾기에 없다면 추가
             FavoriteDepartment favoriteDepartment = new FavoriteDepartment();
             favoriteDepartment.setMember(member);
             favoriteDepartment.setDepartment(department);
             this.saveFavorite(favoriteDepartment);
+            return true;
         }
     }
+
+    public boolean addFavorite(Member member, String departmentName) {
+        Department department = departmentService.getDepartmentByName(departmentName)
+                .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+
+        Optional<FavoriteDepartment> favoriteDepartmentOptional = favoriteDepartmentRepository.findByMemberAndDepartment(member, department);
+
+        if (!favoriteDepartmentOptional.isPresent()) {
+            FavoriteDepartment favoriteDepartment = new FavoriteDepartment();
+            favoriteDepartment.setMember(member);
+            favoriteDepartment.setDepartment(department);
+            this.saveFavorite(favoriteDepartment);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeFavorite(Member member, String departmentName) {
+        Department department = departmentService.getDepartmentByName(departmentName)
+                .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+
+        Optional<FavoriteDepartment> favoriteDepartmentOptional = favoriteDepartmentRepository.findByMemberAndDepartment(member, department);
+
+        if (favoriteDepartmentOptional.isPresent()) {
+            favoriteDepartmentRepository.delete(favoriteDepartmentOptional.get());
+            return true;
+        }
+        return false;
+    }
+
 }

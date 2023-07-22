@@ -34,18 +34,53 @@ public class AnnouncementController {
         List<Announcement> announcements = announcementService.getAnnouncementsByDepartmentNameAndKeyword(departmentName, keyword);
         return AnnouncementResponseDto.toDto(announcements);
     }
+//토글방식
+//    @PostMapping("/{departmentName}/like")
+//    public ResponseEntity<?> addFavorite(@PathVariable String departmentName) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String username = auth.getName();
+//
+//        Member member = memberService.findMemberByUsername(username);
+//
+//        boolean isAdded = favoriteDepartmentService.toggleFavorite(member, departmentName);
+//
+//        String message = isAdded ? departmentName+"가 즐겨찾기에 추가되었습니다." : departmentName+"가 즐겨찾기에서 해제되었습니다.";
+//
+//        return ResponseEntity.ok(message);
+//    }
 
     @PostMapping("/{departmentName}/like")
     public ResponseEntity<?> addFavorite(@PathVariable String departmentName) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-
         Member member = memberService.findMemberByUsername(username);
 
-        favoriteDepartmentService.toggleFavorite(member, departmentName);
+        boolean isAdded = favoriteDepartmentService.addFavorite(member, departmentName);
 
-        return ResponseEntity.ok("Added or deleted Favorites sucessfully");
+        if (isAdded) {
+            String message = departmentName + "가 즐겨찾기에 추가되었습니다.";
+            return ResponseEntity.ok(message);
+        } else {
+            return ResponseEntity.badRequest().body(departmentName + "는 이미 즐겨찾기에 있습니다.");
+        }
     }
+
+    @PostMapping("/{departmentName}/unlike")
+    public ResponseEntity<?> removeFavorite(@PathVariable String departmentName) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Member member = memberService.findMemberByUsername(username);
+
+        boolean isRemoved = favoriteDepartmentService.removeFavorite(member, departmentName);
+
+        if (isRemoved) {
+            String message = departmentName + "가 즐겨찾기에서 해제되었습니다.";
+            return ResponseEntity.ok(message);
+        } else {
+            return ResponseEntity.badRequest().body(departmentName + "는 즐겨찾기에 없습니다.");
+        }
+    }
+
 
 
     @GetMapping("/my")

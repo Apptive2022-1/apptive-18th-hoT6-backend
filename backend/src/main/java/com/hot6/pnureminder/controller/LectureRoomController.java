@@ -2,6 +2,7 @@ package com.hot6.pnureminder.controller;
 
 import com.hot6.pnureminder.dto.LectureRoom.LectureRoomRequestDto;
 import com.hot6.pnureminder.dto.LectureRoom.LectureRoomWithLecturesResponse;
+import com.hot6.pnureminder.dto.LectureRoom.RoomWithStartTimeDTO;
 import com.hot6.pnureminder.entity.Lecture;
 import com.hot6.pnureminder.entity.LectureRoom;
 import com.hot6.pnureminder.service.LectureRoomService;
@@ -20,42 +21,19 @@ import java.util.stream.Collectors;
 public class LectureRoomController {
 
     private final LectureRoomService lectureRoomService;
+
     @GetMapping("/available")
-    public ResponseEntity<List<LectureRoom>> getAvailableLectureRooms(
+    public ResponseEntity<List<RoomWithStartTimeDTO>> getAvailableLectureRoomsAndLectures(
             @RequestParam String buildingName,
-            @RequestParam Integer dayOfWeek,
-            @RequestParam Integer setTime) {
-
-        // DTO 객체 생성 및 데이터 설정
-        LectureRoomRequestDto requestDto = LectureRoomRequestDto.builder()
-                .buildingName(buildingName)
-                .dayOfWeek(dayOfWeek)
-                .currentTime(LocalTime.of(14,40))
-                .setTime(setTime)
-                .build();
-
-        List<LectureRoom> lectureRooms = lectureRoomService.getAvailableLectureRooms(requestDto);
-        return ResponseEntity.ok(lectureRooms);
-    }
-
-    @GetMapping("/available-with-lectures")
-    public ResponseEntity<List<LectureRoomWithLecturesResponse>> getAvailableLectureRoomsAndLectures(
-            @RequestParam String buildingName,
-            @RequestParam Integer dayOfWeek,
             @RequestParam Integer setTime) {
 
         LectureRoomRequestDto requestDto = LectureRoomRequestDto.builder()
                 .buildingName(buildingName)
-                .dayOfWeek(dayOfWeek)
                 .currentTime(LocalTime.of(14, 40))  //임시 시간
                 .setTime(setTime)
                 .build();
 
-        List<Object[]> results = lectureRoomService.getAvailableLectureRoomsAndLectures(requestDto);
-
-        List<LectureRoomWithLecturesResponse> response = results.stream()
-                .map(result -> new LectureRoomWithLecturesResponse((LectureRoom) result[0], (Lecture) result[1]))
-                .collect(Collectors.toList());
+        List<RoomWithStartTimeDTO> response = lectureRoomService.getAvailableLectureRoomsAndLectures(requestDto);
 
         return ResponseEntity.ok(response);
     }

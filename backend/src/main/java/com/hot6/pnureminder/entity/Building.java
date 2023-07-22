@@ -27,15 +27,4 @@ public class Building {
     @Column(name = "building_lng")
     private Double buildingLng;
 
-    @Transient
-    private List<LectureRoom> availableLectureRooms = new ArrayList<>();
-
-    public List<LectureRoom> getAvailableLectureRooms() {
-        return availableLectureRooms;
-    }
-
-    public void setAvailableLectureRooms(List<LectureRoom> availableLectureRooms) {
-        this.availableLectureRooms = availableLectureRooms;
-    }
-
 }

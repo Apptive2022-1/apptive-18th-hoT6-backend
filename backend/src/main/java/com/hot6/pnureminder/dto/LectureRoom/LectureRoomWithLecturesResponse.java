@@ -5,15 +5,15 @@ import com.hot6.pnureminder.entity.Lecture;
 import com.hot6.pnureminder.entity.LectureRoom;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class LectureRoomWithLecturesResponse {
 
     private Integer roomId;
@@ -28,17 +28,11 @@ public class LectureRoomWithLecturesResponse {
         this.buildingNum = lectureRoom.getBuildingNum();
         this.building = lectureRoom.getBuilding();
 
-        // 아래 로직은 실제로는 여러 강의 정보를 수집하는 데 필요한 추가적인 처리를 포함해야 할 수 있습니다.
-        this.lectures = new ArrayList<>();
-        if(lecture != null) {
-            this.lectures.add(new LectureResponse(lecture));
-        }
+        this.lectures = (lecture != null) ? Arrays.asList(new LectureResponse(lecture)) : new ArrayList<>();
     }
 
     @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    private static class LectureResponse {
+    public static class LectureResponse {
         private Integer id;
         private Time startTime;
         private Time runTime;
@@ -52,3 +46,4 @@ public class LectureRoomWithLecturesResponse {
         }
     }
 }
+

@@ -15,9 +15,9 @@ import java.time.LocalTime;
 public class LectureRoomRequestDto {
 
     private String buildingName;
-    private Integer dayOfWeek;
     private LocalTime currentTime;
     private Integer setTime;
+
 
 
 }

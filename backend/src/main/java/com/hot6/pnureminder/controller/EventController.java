@@ -37,7 +37,7 @@ public class EventController {
 
         return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
     }
-    @GetMapping("/Events")
+    @GetMapping
     public ResponseEntity<List<EventDto>> getMonthEvents(@RequestParam(value = "month", required = false) Integer month, Principal principal) {
         if (month == null) {
             // If month is not specified, use the current month

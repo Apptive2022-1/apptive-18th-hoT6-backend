@@ -3,7 +3,7 @@ package com.hot6.pnureminder.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -32,11 +32,11 @@ public class Event {
     @Column
     private String location;
 
-    @Column(nullable = false, columnDefinition ="Asia/Seoul")
-    private ZonedDateTime startTime;
+    @Column(nullable = false, columnDefinition = "DATETIME")
+    private LocalDateTime startTime;
 
-    @Column(nullable = false, columnDefinition ="Asia/Seoul")
-    private ZonedDateTime endTime;
+    @Column(nullable = false, columnDefinition = "DATETIME")
+    private LocalDateTime endTime;
 
     @Column(nullable = false)
     private String color;

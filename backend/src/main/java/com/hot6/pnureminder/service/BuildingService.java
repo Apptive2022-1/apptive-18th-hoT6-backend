@@ -129,6 +129,7 @@ public class BuildingService {
 
 //       현재요일 추출 테스트
         //int currentDayOfWeek = (DayOfWeek.from(LocalDate.now()).getValue())-1;
+//      월요일로 테스트
         int currentDayOfWeek = 0;
 
 //       강의실 리스트 가져와서(LectureRoom pk로) 비어있는 강의실 확인 후 리스트화
@@ -153,10 +154,10 @@ public class BuildingService {
 
     }
 
-        public List<LectureRoomDto> findRoomsByBuildingNameAndSetTimeNow(String buildingName) {
-            Building building = this.findByBuildingName(buildingName);
-            ZonedDateTime currentTime = DateTimeUtilsForTest.getCurrentSeoulTime();
-            return findAvailableLectureRoomsWithSetTime(building,30, currentTime); // setMinutes를 고정값 30으로 설정
+    public List<LectureRoomDto> findRoomsByBuildingNameAndSetTimeNow(String buildingName) {
+        Building building = this.findByBuildingName(buildingName);
+        ZonedDateTime currentTime = DateTimeUtilsForTest.getCurrentSeoulTime();
+        return findAvailableLectureRoomsWithSetTime(building,15, currentTime); // setMinutes를 고정값 30으로 설정
 
     }
 

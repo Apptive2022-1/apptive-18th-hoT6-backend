@@ -3,6 +3,7 @@ package com.hot6.pnureminder.dto;
 import com.hot6.pnureminder.entity.Event;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -17,8 +18,8 @@ public class EventDto {
     private String title;
     private String description;
     private String location;
-    private ZonedDateTime startTime;
-    private ZonedDateTime endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String color;
     private int alarmTime;
 

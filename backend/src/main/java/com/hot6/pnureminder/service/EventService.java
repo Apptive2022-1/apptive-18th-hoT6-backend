@@ -9,10 +9,7 @@ import com.hot6.pnureminder.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,11 +34,13 @@ public class EventService {
 
         // 해당 Event가 어느 달에 존재하는지 확인
         YearMonth yearMonth = YearMonth.of(Year.now().getValue(), month);
-        ZonedDateTime startOfMonth = yearMonth.atDay(1).atStartOfDay(ZoneId.of("Asia/Seoul"));
-        ZonedDateTime endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59, 999999999).atZone(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfMonth = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59, 999999999);
 
         // 이벤트 JPA
-        List<Event> events = eventRepository.findAllByMemberIdAndStartTimeBetweenAndEndTimeBetween(memberId, startOfMonth, endOfMonth, startOfMonth, endOfMonth);
+        List<Event> events = eventRepository.findAllEventsWithinMonthByMemberId(
+                memberId, startOfMonth, endOfMonth
+        );
 
         // DTO 변환
         return events.stream().map(EventDto::fromEntity).collect(Collectors.toList());

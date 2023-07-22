@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "building_location")
-@ToString(exclude = "availableLectureRooms")
 public class Building {
 
     @Id
@@ -27,20 +26,5 @@ public class Building {
 
     @Column(name = "building_lng")
     private Double buildingLng;
-
-    @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FavoriteBuilding> favoriteBuildings = new ArrayList<>();
-
-
-    @Transient
-    private List<LectureRoom> availableLectureRooms = new ArrayList<>();
-
-    public List<LectureRoom> getAvailableLectureRooms() {
-        return availableLectureRooms;
-    }
-
-    public void setAvailableLectureRooms(List<LectureRoom> availableLectureRooms) {
-        this.availableLectureRooms = availableLectureRooms;
-    }
 
 }

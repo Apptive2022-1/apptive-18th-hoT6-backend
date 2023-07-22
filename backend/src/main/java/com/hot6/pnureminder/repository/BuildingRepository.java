@@ -8,13 +8,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-    @Repository
-    public interface BuildingRepository extends JpaRepository<Building, Long> {
-        Optional<Building> findByBuildingNum (Integer buildingNum);
+@Repository
+public interface BuildingRepository extends JpaRepository<Building, Long> {
+    Optional<Building> findByBuildingNum (Integer buildingNum);
 
-        Optional<Building> findByBuildingName(String buildingName);
+    Optional<Building> findByBuildingName(String buildingName);
 
-        @Query(value = "SELECT building_num, building_name, building_lat, building_lng, ST_Distance_Sphere(POINT(:longitude, :latitude), POINT(building_lng, building_lat)) AS distance FROM building_location ORDER BY distance", nativeQuery = true)
-        List<Object[]> findNearestBuildingsWithDistance(double latitude, double longitude);
-    }
+    @Query(value = "SELECT building_num, building_name, building_lat, building_lng, ST_Distance_Sphere(POINT(:longitude, :latitude), POINT(building_lng, building_lat)) AS distance FROM building_location ORDER BY distance", nativeQuery = true)
+    List<Object[]> findNearestBuildingsWithDistance(double latitude, double longitude);
+}
 

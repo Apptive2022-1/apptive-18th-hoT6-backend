@@ -10,7 +10,6 @@ import java.sql.Time;
 @Entity
 @Data
 @Table(name = "lecture")
-@ToString(exclude = "lectureRoom")
 public class Lecture {
 
     @Id
@@ -32,7 +31,6 @@ public class Lecture {
 
     @ManyToOne
     @JoinColumn(name = "lecture_room_id", insertable = false, updatable = false)
-    @JsonBackReference
     private LectureRoom lectureRoom;
 
 }

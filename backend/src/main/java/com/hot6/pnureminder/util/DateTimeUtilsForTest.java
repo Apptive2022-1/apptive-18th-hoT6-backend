@@ -3,10 +3,7 @@ package com.hot6.pnureminder.util;
 import com.hot6.pnureminder.entity.Lecture;
 
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 
 public class DateTimeUtilsForTest {
@@ -35,5 +32,27 @@ public class DateTimeUtilsForTest {
         int hours = lecture.getRunTime().toLocalTime().getHour();
         int minutes = lecture.getRunTime().toLocalTime().getMinute();
         return lectureStartTime.plus(hours, ChronoUnit.HOURS).plus(minutes, ChronoUnit.MINUTES);
+    }
+
+    public static int getCurrentDayOfWeekAsInt() {
+        DayOfWeek dayOfWeek = LocalDate.now().getDayOfWeek();
+        switch (dayOfWeek) {
+            case MONDAY:
+                return 0;
+            case TUESDAY:
+                return 1;
+            case WEDNESDAY:
+                return 2;
+            case THURSDAY:
+                return 3;
+            case FRIDAY:
+                return 4;
+            case SATURDAY:
+                return 5;
+            case SUNDAY:
+                return 6;
+            default:
+                throw new RuntimeException("Unknown day of week: " + dayOfWeek);
+        }
     }
 }

@@ -51,7 +51,34 @@ public class FavoriteBuildingService {
         return favoriteBuildingRepository.save(favorite);
     }
 
-    public void toggleFavorite(Member member, String BuildingName) {
+    public boolean addFavorite(Member member, String buildingName) {
+        Building building = buildingService.findByBuildingName(buildingName);
+        Optional<FavoriteBuilding> favoriteBuildingOptional = favoriteBuildingRepository.findByMemberAndBuilding(member, building);
+
+        if (!favoriteBuildingOptional.isPresent()) {
+            FavoriteBuilding favoriteBuilding = new FavoriteBuilding();
+            favoriteBuilding.setMember(member);
+            favoriteBuilding.setBuilding(building);
+            this.saveFavorite(favoriteBuilding);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeFavorite(Member member, String buildingName) {
+        Building building = buildingService.findByBuildingName(buildingName);
+        Optional<FavoriteBuilding> favoriteBuildingOptional = favoriteBuildingRepository.findByMemberAndBuilding(member, building);
+
+        if (favoriteBuildingOptional.isPresent()) {
+            favoriteBuildingRepository.delete(favoriteBuildingOptional.get());
+            return true;
+        }
+        return false;
+    }
+
+
+    //토글 방식 구현
+    public boolean toggleFavorite(Member member, String BuildingName) {
 
         Building building = buildingService.findByBuildingName(BuildingName);
         Optional<FavoriteBuilding> favoriteBuildingOptional = favoriteBuildingRepository.findByMemberAndBuilding(member, building);
@@ -59,12 +86,14 @@ public class FavoriteBuildingService {
         if (favoriteBuildingOptional.isPresent()) {
             // 이미 즐겨찾기에 추가되어 있다면 삭제
             favoriteBuildingRepository.delete(favoriteBuildingOptional.get());
+            return false;
         } else {
             // 즐겨찾기에 없다면 추가
             FavoriteBuilding favoriteBuilding = new FavoriteBuilding();
             favoriteBuilding.setMember(member);
             favoriteBuilding.setBuilding(building);
             this.saveFavorite(favoriteBuilding);
+            return true;
         }
     }
 }

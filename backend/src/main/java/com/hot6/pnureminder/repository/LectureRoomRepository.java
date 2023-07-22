@@ -21,9 +21,9 @@ public interface LectureRoomRepository extends JpaRepository<LectureRoom, Intege
     List<LectureRoom> findAvailableLectureRooms(String buildingName, Integer dayOfWeek, LocalTime endOfOngoingLecture, LocalTime startOfNextLecture, LocalTime currentTime);
 
 
-    @EntityGraph(attributePaths = {"building"})
-    @Query("SELECT lr, l FROM LectureRoom lr LEFT JOIN Lecture l ON l.lectureRoom = lr WHERE lr.building.buildingName = :buildingName AND (l IS NULL OR (l.dayOfWeek = :dayOfWeek AND ((l.startTime <= :currentTime AND :currentTime <= :endOfOngoingLecture) OR (l.startTime <= :startOfNextLecture))))")
-    List<Object[]> findAvailableLectureRoomsAndLectures(String buildingName, Integer dayOfWeek, LocalTime endOfOngoingLecture, LocalTime startOfNextLecture, LocalTime currentTime);
 
+    @EntityGraph(attributePaths = {"building"})
+    @Query("SELECT lr, l FROM LectureRoom lr LEFT JOIN Lecture l ON l.lectureRoom = lr AND l.dayOfWeek = :dayOfWeek AND l.startTime > :endOfOngoingLecture WHERE lr.building.buildingName = :buildingName AND NOT EXISTS (SELECT 1 FROM Lecture innerL WHERE innerL.lectureRoom = lr AND innerL.dayOfWeek = :dayOfWeek AND (innerL.startTime BETWEEN :currentTime AND :endOfOngoingLecture OR (innerL.startTime + FUNCTION('TIME_TO_SEC', innerL.runTime)) BETWEEN :currentTime AND :endOfOngoingLecture))")
+    List<Object[]> findAvailableLectureRoomsAndLectures(String buildingName, Integer dayOfWeek, LocalTime endOfOngoingLecture, LocalTime currentTime);
 
 }

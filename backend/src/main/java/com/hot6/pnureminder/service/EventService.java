@@ -52,6 +52,31 @@ public class EventService {
         return EventDto.fromEntity(event);
     }
 
+    public EventDto updateEvent(String username, Long eventId, EventDto eventDtoToUpdate) {
+        Member member = memberService.findMemberByUsername(username);
+        Event existingEvent = eventRepository.findByMemberIdAndEventId(member.getId(), eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found for this id : " + eventId));
+
+        if (!existingEvent.getMember().getId().equals(member.getId())) {
+            throw new UnauthorizedException("You are not allowed to update this event");
+        }
+
+        // Copy changes from DTO to Entity
+        existingEvent.setTitle(eventDtoToUpdate.getTitle());
+        existingEvent.setDescription(eventDtoToUpdate.getDescription());
+        existingEvent.setLocation(eventDtoToUpdate.getLocation());
+        existingEvent.setStartTime(eventDtoToUpdate.getStartTime());
+        existingEvent.setEndTime(eventDtoToUpdate.getEndTime());
+        existingEvent.setColor(eventDtoToUpdate.getColor());
+        existingEvent.setAlarmTime(eventDtoToUpdate.getAlarmTime());
+
+        // Save updated event
+        Event updatedEvent = eventRepository.save(existingEvent);
+
+        return EventDto.fromEntity(updatedEvent);
+    }
+
+
     public void deleteEvent(String username, Long eventId) {
         Member member = memberService.findMemberByUsername(username);
         Event event = eventRepository.findByMemberIdAndEventId(member.getId(), eventId)

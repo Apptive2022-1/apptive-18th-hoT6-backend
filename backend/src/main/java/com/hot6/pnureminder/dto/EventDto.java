@@ -23,8 +23,8 @@ public class EventDto {
     private String color;
     private int alarmTime;
 
-    // getters and setters
 
+    //객체 변환은 인스턴스 메서드로
     public Event toEntity() {
         return Event.builder()
                 .eventId(eventId)
@@ -38,7 +38,18 @@ public class EventDto {
                 .build();
     }
 
-    //회원 id는 숨김(보안상 문제)
+    //객체 수정은 인스턴스 메서드로
+    public void updateFrom(EventDto source) {
+        this.title = source.title;
+        this.description = source.description;
+        this.location = source.location;
+        this.startTime = source.startTime;
+        this.endTime = source.endTime;
+        this.color = source.color;
+        this.alarmTime = source.alarmTime;
+    }
+
+    //객체 생성은 정적 메서드로 중앙집중화
     public static EventDto fromEntity(Event event) {
         return EventDto.builder()
                 .eventId(event.getEventId())

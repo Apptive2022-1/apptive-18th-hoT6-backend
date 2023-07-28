@@ -17,6 +17,7 @@ public class LectureRoomRequestDto {
     private String buildingName;
     private LocalTime currentTime;
     private Integer setTime;
+    private Integer dayOfWeek;
 
 
 

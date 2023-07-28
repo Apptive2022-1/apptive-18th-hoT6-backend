@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,14 @@ public class FavoriteBuildingService {
         return favoriteBuildingRepository.findByMember(member);
     }
 
+    public List<Building> findBuildingByMember(Member member){
+
+        return favoriteBuildingRepository.findByMember(member)
+                .stream()
+                .map(FavoriteBuilding::getBuilding)
+                .collect(Collectors.toList());
+
+    }
     public List<FavoriteBuildingRoomListDto> getFavoriteBuildings(Member member) {
         List<FavoriteBuilding> favoriteBuildings = favoriteBuildingRepository.findByMember(member);
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -96,6 +97,8 @@ public class LectureRoomController {
     }
     @GetMapping("/favorite-list")
     public ResponseEntity<List<BuildingResponseDto>> getListOfFavoriteLectureRoomsAndLectures(
+            @RequestParam("user_latitude") double latitude,
+            @RequestParam("user_longitude") double longitude,
             @RequestParam Integer setTime
     ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -103,9 +106,15 @@ public class LectureRoomController {
 
         Member member = memberService.findMemberByUsername(username);
         List<Building> buildings = favoriteBuildingService.findBuildingByMember(member);
+        List<Building> allNearestBuildings = buildingService.findNearestBuildings(latitude, longitude);
+
+        // 사용자의 즐겨찾기 건물만 필터링
+        List<Building> favoriteNearestBuildings = allNearestBuildings.stream()
+                .filter(building -> buildings.contains(building))
+                .collect(Collectors.toList());
         List<BuildingResponseDto> responses = new ArrayList<>();
 
-        for (Building building : buildings) {
+        for (Building building : favoriteNearestBuildings) {
             String buildingName = building.getBuildingName();
 
             LectureRoomRequestDto requestDto = LectureRoomRequestDto.builder()

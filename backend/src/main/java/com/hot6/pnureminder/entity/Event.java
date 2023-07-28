@@ -1,5 +1,6 @@
 package com.hot6.pnureminder.entity;
 
+import com.hot6.pnureminder.dto.EventDto;
 import jakarta.persistence.*;
 import lombok.*;
 

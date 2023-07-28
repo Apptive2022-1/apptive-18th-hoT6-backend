@@ -14,7 +14,8 @@ import java.time.ZonedDateTime;
 public class EventDto {
 
     private Long eventId;
-    private Long memberId;
+//    학사일정 수정을 위한 매개변수(미사용)
+//    private Long memberId;
     private String title;
     private String description;
     private String location;
@@ -36,17 +37,6 @@ public class EventDto {
                 .color(color)
                 .alarmTime(alarmTime)
                 .build();
-    }
-
-    //객체 수정은 인스턴스 메서드로
-    public void updateFrom(EventDto source) {
-        this.title = source.title;
-        this.description = source.description;
-        this.location = source.location;
-        this.startTime = source.startTime;
-        this.endTime = source.endTime;
-        this.color = source.color;
-        this.alarmTime = source.alarmTime;
     }
 
     //객체 생성은 정적 메서드로 중앙집중화

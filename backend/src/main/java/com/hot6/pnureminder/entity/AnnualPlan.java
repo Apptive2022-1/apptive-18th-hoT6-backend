@@ -3,6 +3,8 @@ package com.hot6.pnureminder.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Table(name = "annualplan")
@@ -13,9 +15,9 @@ public class AnnualPlan {
     private Long id;
 
     @Column(name = "start_date")
-    private String startDate;
+    private LocalDateTime startDate;
     @Column(name = "end_date")
-    private String endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "context")
     private String context;

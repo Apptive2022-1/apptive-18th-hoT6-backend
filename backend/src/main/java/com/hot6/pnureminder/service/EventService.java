@@ -1,10 +1,13 @@
 package com.hot6.pnureminder.service;
 
 import com.hot6.pnureminder.dto.EventDto;
+import com.hot6.pnureminder.entity.AnnualPlan;
 import com.hot6.pnureminder.entity.Event;
 import com.hot6.pnureminder.entity.Member;
 import com.hot6.pnureminder.exception.ResourceNotFoundException;
 import com.hot6.pnureminder.exception.UnauthorizedException;
+import com.hot6.pnureminder.mapperclass.AnnualPlanMapper;
+import com.hot6.pnureminder.repository.AnnualPlanRepository;
 import com.hot6.pnureminder.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,8 @@ import java.util.stream.Collectors;
 public class EventService {
     private final EventRepository eventRepository;
     private final MemberService memberService;
+    private final AnnualPlanRepository annualPlanRepository;
+    private final AnnualPlanMapper annualPlanMapper;
 
     public EventDto createEvent(String username, EventDto eventDto) {
         Member member = memberService.findMemberByUsername(username);
@@ -30,7 +35,10 @@ public class EventService {
     }
 
     public List<EventDto> getMonthEvents(String username, int month) {
-        Long memberId = memberService.findMemberByUsername(username).getId();
+        Member member = memberService.findMemberByUsername(username);
+        Long memberId = member.getId();
+        Integer state1 = member.getState();
+        Integer state2 = 0;
 
         // 해당 Event가 어느 달에 존재하는지 확인
         YearMonth yearMonth = YearMonth.of(Year.now().getValue(), month);
@@ -42,8 +50,19 @@ public class EventService {
                 memberId, startOfMonth, endOfMonth
         );
 
+        // 학사일정 JPA
+        List<AnnualPlan> annualPlans = annualPlanRepository.findAllAnnualPlanWithinMonthByStateOrState(startOfMonth, endOfMonth, state1, state2);
+
         // DTO 변환
-        return events.stream().map(EventDto::fromEntity).collect(Collectors.toList());
+        List<EventDto> eventDtos = events.stream().map(EventDto::fromEntity).collect(Collectors.toList());
+
+        // AnnualPlan을 EventDto로 변환
+        List<EventDto> annualPlanDtos = annualPlans.stream()
+                .map(annualPlan -> annualPlanMapper.annualPlanToEventDto(annualPlan))
+                .toList();
+        eventDtos.addAll(annualPlanDtos);
+
+        return eventDtos;
     }
     public EventDto getEvent(String username, Long eventId){
         Long memberId = memberService.findMemberByUsername(username).getId();
